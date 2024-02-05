@@ -1,9 +1,13 @@
 <script lang="ts">
 
-    import {settings, themes} from '$lib/stores/settings'
+    import {settings, themes} from '$lib/stores/settings.js'
 
     function setTheme(e) {
         $settings.theme = e.currentTarget.value
+    }
+
+    function setApiRootUrl(e) {
+        $settings.apiRootUrl = e.currentTarget.value
     }
 
 </script>
@@ -24,7 +28,18 @@
                     </label>
                 </div>
             {/each}
-
+        </div>
+    </div>
+    <div class="card w-96 bg-primary text-primary-content">
+        <h3 class='card-title'>API</h3>
+        <div class='card-body'>
+            <div class="form-control">
+                <label class="label cursor-pointer">
+                    <span class="label-text">API Root Url</span>
+                    <input type='text' name='api-root' class='input' on:change={setApiRootUrl}
+                           value={$settings.apiRootUrl}/>
+                </label>
+            </div>
         </div>
     </div>
 </div>
