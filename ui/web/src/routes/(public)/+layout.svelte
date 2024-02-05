@@ -1,10 +1,6 @@
-<script>
-    import '../../app.css'
-    import {settings} from '$lib/stores/settings'
-</script>
+<script></script>
 
 
-<h1>public layout. current theme is {$settings.theme}</h1>
 <slot/>
 <!--<div class="w-full flex flex-col sm:flex-row flex-grow overflow-hidden">-->
 <!--    <div class="sm:w-1/3 md:1/4 w-full flex-shrink flex-grow-0 p-4">-->

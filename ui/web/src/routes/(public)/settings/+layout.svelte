@@ -1,12 +1,16 @@
 <script>
-    import TwoColumn from "$lib/components/layouts/TwoColumn.svelte";
+    import HolyGrail from "$lib/components/layouts/HolyGrail.svelte";
+    import {settings} from "$lib/stores/settings";
 </script>
 
-<TwoColumn>
+<HolyGrail>
+    <div slot='header'>
+        <h1>public layout. current theme is {$settings.theme}</h1>
+    </div>
     <div slot='left-col'>LEFT COL</div>
 
     <div slot='main'>
         <slot/>
     </div>
-    <div slot='footer'/>
-</TwoColumn>
+    <div slot='footer'></div>
+</HolyGrail>
