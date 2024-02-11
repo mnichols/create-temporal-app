@@ -1,0 +1,12 @@
+input AQueryInput {
+    value: String
+}
+type Query {
+    aQuery(input: AQueryInput): String
+}
+input AMutationInput {
+    value: String
+}
+type Mutation {
+    aMutation(input: AMutationInput):String
+}
