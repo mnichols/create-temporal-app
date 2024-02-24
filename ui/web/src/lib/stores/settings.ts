@@ -36,7 +36,7 @@ export const themes = [
 ]
 export const settings = writable({
     theme: themes[0],
-    apiRootUrl: '',
+    apiRootUrl: 'https://spacex-production.up.railway.app',
     temporalOptions: {
         taskQueue: '',
         namespace: '',
