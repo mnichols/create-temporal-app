@@ -73,7 +73,6 @@
     "@urql/exchange-auth": "^2.1.6",
     "@urql/exchange-graphcache": "^6.4.1",
     "@urql/svelte": "^4.0.4",
-    "graphql-codegen-svelte-apollo": "^1.1.0",
     "graphql-sse": "^2.5.2",
     "roarr": "^7.21.0",
     "uri-template": "^2.0.0",

@@ -1,6 +1,6 @@
 import {ROARR, Roarr} from 'roarr';
 
-let loggers = {
+let loggers: Record<string, any> = {
     10: console.trace.bind(console),
     20: console.debug.bind(console),
     30: console.log.bind(console),

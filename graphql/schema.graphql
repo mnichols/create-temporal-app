@@ -1,12 +1,23 @@
-input AQueryInput {
+input PingInput {
+    value: String
+}
+type Pong {
     value: String
 }
 type Query {
-    aQuery(input: AQueryInput): String
+    pong(input: PingInput): Pong
 }
-input AMutationInput {
+input DoPingInput {
     value: String
 }
 type Mutation {
-    aMutation(input: AMutationInput):String
+    doPing(input: DoPingInput):Pong
+}
+
+input SubPingInput {
+    value: String
+}
+
+type Subscription {
+    subPing(input: SubPingInput): Pong
 }

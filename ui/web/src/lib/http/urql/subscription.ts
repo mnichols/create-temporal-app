@@ -1,9 +1,9 @@
 import {subscriptionExchange, type SubscriptionExchangeOpts} from '@urql/core';
 import {PUBLIC_SUBSCRIPTIONS_URL} from '$env/static/public'
+import type {RequestParams} from 'graphql-sse'
 import {createClient as createSSEClient, type StreamEvent, type StreamMessage} from 'graphql-sse';
 import type {Exchange} from '@urql/svelte'
 import {Logger} from '$lib/log/index.js'
-import type {RequestParams} from 'graphql-sse/lib/common.js'
 
 // note we are using the distinct connections mode. you might prefer a singleConnection: true
 const sseClient = createSSEClient({
@@ -12,7 +12,7 @@ const sseClient = createSSEClient({
 });
 
 export const createSubscriptionExchange = (mustUseSubscriptionsURL?: string, opts?: SubscriptionExchangeOpts): Exchange => {
-    subscriptionExchange({
+    return subscriptionExchange({
         forwardSubscription(request, operation) {
 
             return {
@@ -45,7 +45,7 @@ export const createSubscriptionExchange = (mustUseSubscriptionsURL?: string, opt
                                     // sink.next(tmp)
                                 }
                             } catch (e) {
-                                Logger.error(e, '#fetch-sse.onmessage: %s', 'failed to handle `next`')
+                                Logger.error('#fetch-sse.onmessage: %s', e + '', 'failed to handle `next`')
                             }
                         }
                     });
