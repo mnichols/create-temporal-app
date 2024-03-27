@@ -6,7 +6,7 @@ const config: CodegenConfig = {
     ignoreNoDocuments: true,
     generates: {
         './generated.ts': {
-            plugins: ['typescript', 'typescript-operations', 'typed-document-node'],
+            plugins: ['typescript', 'typescript-operations', 'typescript-resolvers', 'typed-document-node'],
             config: {
                 useTypeImports: true,
             }

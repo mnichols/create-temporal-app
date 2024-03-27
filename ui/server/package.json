@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "codegen": "graphql-codegen --config codegen.ts",
     "sse-server-loaded": "node --loader ts-node/esm sse-server.ts",
+    "sse-client-loaded": "node --loader ts-node/esm sse-client.ts",
     "sse-server": "node --import 'data:text/javascript,import{register}from\"node:module\";import{pathToFileURL}from\"node:url\";register(\"ts-node/esm\",pathToFileURL(\"./\"));' ./sse-server.ts"
   },
   "author": "",
@@ -18,8 +19,10 @@
     "@graphql-codegen/typed-document-node": "^5.0.6",
     "@graphql-codegen/typescript": "^4.0.6",
     "@graphql-codegen/typescript-operations": "^4.2.0",
+    "@graphql-codegen/typescript-resolvers": "^4.0.6",
     "@graphql-tools/graphql-file-loader": "^8.0.1",
     "@graphql-tools/load": "^8.0.2",
+    "@graphql-tools/schema": "^10.0.3",
     "@graphql-typed-document-node/core": "^3.2.0",
     "graphql": "^16.8.1",
     "graphql-sse": "^2.5.2",

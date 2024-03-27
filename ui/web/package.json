@@ -75,6 +75,7 @@
     "@urql/svelte": "^4.0.4",
     "graphql-sse": "^2.5.2",
     "roarr": "^7.21.0",
+    "serialize-error": "^11.0.3",
     "uri-template": "^2.0.0",
     "url-template": "^3.1.1"
   }

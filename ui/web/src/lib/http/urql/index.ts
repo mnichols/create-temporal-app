@@ -12,6 +12,7 @@ import {createSubscriptionExchange} from '$lib/http/urql/subscription.js'
 export const createClient = (): Client => {
     return createURQLClient({
         url: PUBLIC_GRAPHQL_URL,
+        // fetchSubscriptions: true,
         exchanges: [
             devtoolsExchange,
             debugExchange,
