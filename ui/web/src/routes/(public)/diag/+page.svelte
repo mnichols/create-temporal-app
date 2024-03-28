@@ -3,6 +3,8 @@
     import {Logger} from '$lib/log/index.js'
     import {SubPingDocument} from '$gql'
     import {serializeError} from 'serialize-error'
+    import Status from '$lib/components/connection/Status.svelte'
+    import {onDestroy} from 'svelte'
 
     let logger = Logger.child({component: 'diag'})
     let vals: string[] = []
@@ -18,11 +20,11 @@
         }
         logger.debug('current data = %s', JSON.stringify(data))
 
-        vals = [...vals, data.subPing.value]
+        vals = [data.subPing.value, ...vals]
     }
     // see here for subscriptionStore docs: https://commerce.nearform.com/open-source/urql/docs/api/svelte/
-    let messages = subscriptionStore({client, query: SubPingDocument, variables: {input: {value: 'foo'}}}, handleData)
-    messages.subscribe(arg2 => {
+    let messages = subscriptionStore({client, query: SubPingDocument, variables: {input: {value: 'ping'}}}, handleData)
+    let unsubscribe = messages.subscribe(arg2 => {
         if (arg2.error) {
             logger.error({
                 error: serializeError(arg2.error)
@@ -40,20 +42,22 @@
             logger.debug('ss.unsubscribing')
         }
     })
-
+    onDestroy(unsubscribe)
 </script>
 
 <header>
     <h1>Simple Subscription Diagnostics</h1>
     <h2>Default retry options for SSE Client found <a
+            class='link'
             about='_blank'
             href='https://the-guild.dev/graphql/sse/docs/interfaces/client.ClientOptions#retry'>here</a>
     </h2>
 </header>
-<div class='indicator'>
-    <span class="indicator-item indicator-start badge {$messages.error ? 'badge-error' : 'badge-accent'}"></span>
-    <h1 class="grid w-64 h-16 bg-base-300 place-items-center">Subscriptions Connected</h1>
-</div>
+<Status store={messages}/>
+<!--<div class='indicator'>-->
+<!--    <span class="indicator-item badge {$messages.error ? 'badge-error' : 'badge-accent'}"></span>-->
+<!--    <h1 class="grid w-64 h-16 bg-base-300 place-items-center">Subscription Status</h1>-->
+<!--</div>-->
 
 <!--{#if $ss.fetching}-->
 <!--    <p>Loading...</p>-->
@@ -62,11 +66,16 @@
 {:else if showVals.length < 1}
     <p class='text-secondary'>No Data</p>
 {:else}
-    <ul>
-        {#each showVals as sub, index}
-            <li>{index}-{sub}</li>
-        {/each}
-    </ul>
+    <div class='overflow-y-auto h-128'>
+        <ul>
+            {#each showVals as sub, index}
+                <li>
+                    <div class='bg-neutral text-neutral-content'>{index}-{sub}</div>
+                    <div class="divider">--</div>
+                </li>
+            {/each}
+        </ul>
+    </div>
 {/if}
 
 

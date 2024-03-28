@@ -13,23 +13,12 @@ async function* interval(t: any) {
     }
 }
 
-const sub = {
+// subPingSubscription yields the current time prepended by the input `value` for the subscription every 1000ms
+const subPingSubscription = {
     subscribe: async function* (parent: Subscription, args: Partial<SubscriptionSubPingArgs>, context: any, info: GraphQLResolveInfo) {
         for await (const time of interval(1000)) {
-            yield time
+            yield `server reply: ${args.input?.value} @ ${time}`
         }
-
-
-        // let time = showTime()
-        // let current = time.n
-        // while (time.next()) {
-        //     yield time.next().value
-        // }
-
-        // for await (const word of ['Hello', 'Bonjour', 'Ciao']) {
-        //     console.log('yielding', word)
-        //     yield {value: `${args.input?.value} -- ${word}`};
-        // }
     },
     resolve: (payload: any): Pong => {
         console.log('returning payload', payload)
@@ -43,6 +32,6 @@ export const resolvers: Resolvers = {
         }
     },
     Subscription: {
-        subPing: sub,
+        subPing: subPingSubscription,
     }
 }

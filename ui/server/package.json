@@ -6,9 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "codegen": "graphql-codegen --config codegen.ts",
-    "sse-server-loaded": "node --loader ts-node/esm sse-server.ts",
-    "sse-client-loaded": "node --loader ts-node/esm sse-client.ts",
-    "sse-server": "node --import 'data:text/javascript,import{register}from\"node:module\";import{pathToFileURL}from\"node:url\";register(\"ts-node/esm\",pathToFileURL(\"./\"));' ./sse-server.ts"
+    "sse-server-loaded": "node --loader ts-node/esm sse-server.ts"
   },
   "author": "",
   "license": "ISC",
