@@ -45,6 +45,12 @@ The UI is all in on
 
 The UI is all in on [roarr](https://github.com/gajus/roarr).
 
+### Running The UI
+
+`npm run dev` starts an HTTPS dev server.
+
+Set environment variables with `.env` in the `ui/web` root.
+
 ### Diagnostics
 
 #### GraphQL Subscriptions
