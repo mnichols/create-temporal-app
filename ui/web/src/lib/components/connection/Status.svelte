@@ -1,6 +1,5 @@
 <script lang="ts">
     export let store = undefined
-    export let unsubscribe = undefined
     $: paused = store.isPaused$
 </script>
 {#if $store?.error}

@@ -18,8 +18,8 @@ const schema = makeExecutableSchema({
 console.log(printSchema(typeDefs));
 
 const options = {
-    key: fs.readFileSync('/Users/mnichols/certs/temporal-demo-infra.sdvdw.key'),
-    cert: fs.readFileSync('/Users/mnichols/certs/temporal-demo-infra.sdvdw.pem'),
+    key: fs.readFileSync('../../localhost-key.pem'),
+    cert: fs.readFileSync('../../localhost.pem'),
 };
 
 //Create the GraphQL over SSE handler

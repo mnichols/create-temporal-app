@@ -23,10 +23,8 @@ export default defineConfig({
     },
     server: {
         https: {
-            // key: fs.readFileSync(`${__dirname}/cert/key.pem`),
-            // cert: fs.readFileSync(`${__dirname}/cert/cert.pem`)
-            key: fs.readFileSync(`/Users/mnichols/certs/temporal-shop-prod.sdvdw.key`),
-            cert: fs.readFileSync(`/Users/mnichols/certs/temporal-shop-prod.sdvdw.pem`)
+            key: fs.readFileSync(`../../localhost-key.pem`),
+            cert: fs.readFileSync(`../../localhost.pem`)
         },
         //  without the proxy does NOT work.
         proxy: {}

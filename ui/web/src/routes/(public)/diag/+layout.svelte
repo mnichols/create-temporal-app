@@ -4,7 +4,9 @@
 
 <HolyGrail>
     <div slot='header'>
-        <h1>Diagnostics Page</h1>
+        <header class='bg-neutral text-center text-neutral-content '>
+            <h1>Diagnostics Page</h1>
+        </header>
     </div>
     <div slot='left-col'></div>
 

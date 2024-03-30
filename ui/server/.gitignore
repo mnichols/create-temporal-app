@@ -1,0 +1,6 @@
+ca.*
+cert.*
+*.key
+*.crt
+*.pem
+
