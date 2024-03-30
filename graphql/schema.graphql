@@ -1,0 +1,23 @@
+input PingInput {
+    value: String
+}
+type Pong {
+    value: String
+}
+type Query {
+    pong(input: PingInput): Pong
+}
+input DoPingInput {
+    value: String
+}
+type Mutation {
+    doPing(input: DoPingInput):Pong
+}
+
+input SubPingInput {
+    value: String
+}
+
+type Subscription {
+    subPing(input: SubPingInput): Pong
+}
