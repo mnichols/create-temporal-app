@@ -1,0 +1,31 @@
+{
+  "name": "create-temporal-app-typescript",
+  "version": "1.0.0",
+  "description": "Typescript accelerator for Temporal apps",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --build",
+    "build.watch": "tsc --build --watch",
+    "build:workflow": "mkdir -p build && tsx scripts/build-workflow-bundle.ts",
+    "lint": "eslint .",
+    "start": "node --import tsx src/domain/index.ts",
+    "start.watch": "nodemon src/worker.ts",
+    "workflow": "ts-node src/client.ts"
+  },
+  "type": "module",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@temporalio/activity": "^1.9.3",
+    "@temporalio/client": "^1.9.3",
+    "@temporalio/worker": "^1.9.3",
+    "@temporalio/workflow": "^1.9.3",
+    "dotenv-extended": "^2.9.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^16.1.3",
+    "@types/node": "^20.12.4",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.7.2"
+  }
+}

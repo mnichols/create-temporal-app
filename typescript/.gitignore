@@ -1,18 +1,14 @@
-### TypeJSScript ###
-# dependencies
+.DS_Store
 node_modules
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
+/.svelte-kit
+/package
+/cypress/screenshots
+/cypress/videos
+/build-local
+/build-cloud
 /coverage
-
-/out/
-
-# misc
-*.pem
-*.key
+*.log
+*.swp
 
 # debug
 npm-debug.log*
