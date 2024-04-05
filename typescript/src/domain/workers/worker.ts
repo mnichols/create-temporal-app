@@ -10,7 +10,14 @@ const __dirname = path.dirname(__filename);
 
 export const createWorkerOptions = async (cfg: Config, activities?: object | undefined): Promise<WorkerOptions> => {
     const {Temporal: tcfg} = cfg
-    const connection = await createNativeConnection(tcfg)
+
+    let connection
+    try {
+        connection = await createNativeConnection(tcfg)
+    } catch (err) {
+        console.error(err)
+        throw err
+    }
     const workerOpts: WorkerOptions = {
         activities,
         // buildId: '',
@@ -23,15 +30,15 @@ export const createWorkerOptions = async (cfg: Config, activities?: object | und
         // enableSDKTracing: false,
         // identity: '',
         // interceptors: undefined,
-        maxActivitiesPerSecond: tcfg.worker.rateLimits.maxWorkerActivitiesPerSecond,
-        maxCachedWorkflows: 0,
-        maxConcurrentActivityTaskExecutions: tcfg.worker.capacity.maxConcurrentActivityExecutors,
-        maxConcurrentActivityTaskPolls: tcfg.worker.capacity.maxConcurrentActivityTaskPollers,
-        maxConcurrentLocalActivityExecutions: tcfg.worker.capacity.maxConcurrentLocalActivityExecutors,
-        maxConcurrentWorkflowTaskExecutions: tcfg.worker.capacity.maxConcurrentWorkflowTaskExecutions,
-        maxConcurrentWorkflowTaskPolls: tcfg.worker.capacity.maxConcurrentWorkflowTaskPollers,
+        maxActivitiesPerSecond: tcfg.worker.rateLimits?.maxWorkerActivitiesPerSecond,
+        maxTaskQueueActivitiesPerSecond: tcfg.worker.rateLimits?.maxTaskQueueActivitiesPerSecond,
+        maxCachedWorkflows: tcfg.worker.capacity?.maxCachedWorkflows,
+        maxConcurrentActivityTaskExecutions: tcfg.worker.capacity?.maxConcurrentActivityExecutors,
+        maxConcurrentActivityTaskPolls: tcfg.worker.capacity?.maxConcurrentActivityTaskPollers,
+        maxConcurrentLocalActivityExecutions: tcfg.worker.capacity?.maxConcurrentLocalActivityExecutors,
+        maxConcurrentWorkflowTaskExecutions: tcfg.worker.capacity?.maxConcurrentWorkflowTaskExecutions,
         // maxHeartbeatThrottleInterval: undefined,
-        maxTaskQueueActivitiesPerSecond: tcfg.worker.rateLimits.maxTaskQueueActivitiesPerSecond,
+        maxConcurrentWorkflowTaskPolls: tcfg.worker.capacity?.maxConcurrentWorkflowTaskPollers,
         namespace: tcfg.connection.namespace,
         // nonStickyToStickyPollRatio: 0,
         // reuseV8Context: false,
@@ -55,6 +62,7 @@ export const createWorkerOptions = async (cfg: Config, activities?: object | und
     return workerOpts
 }
 export const createWorker = async (opts: WorkerOptions): Promise<Worker> => {
+    console.log('opts', opts)
     return await Worker.create(opts)
 }
 

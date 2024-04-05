@@ -27,6 +27,7 @@ const getConnectionOptions = (tcfg: TemporalConfig): ConnectionOptions => {
             serverRootCACertificate: tcfg.connection.mtls.serverRootCACertificate,
         }
     }
+    console.log('connection options', connOpts)
     return connOpts
 }
 export const createConnection = async (tcfg?: TemporalConfig): Promise<Connection> => {

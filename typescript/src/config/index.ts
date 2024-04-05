@@ -27,6 +27,7 @@ export interface TemporalWorkerCapacity {
     maxConcurrentLocalActivityExecutors?: number
     maxConcurrentWorkflowTaskPollers?: number
     maxConcurrentActivityTaskPollers?: number
+    maxCachedWorkflows?: number
 }
 
 export interface TemporalWorkerRateLimits {
@@ -35,10 +36,11 @@ export interface TemporalWorkerRateLimits {
 }
 
 export interface TemporalWorker {
+
     taskQueue: string
-    name: string
-    capacity: TemporalWorkerCapacity
-    rateLimits: TemporalWorkerRateLimits
+    name?: string
+    capacity?: TemporalWorkerCapacity
+    rateLimits?: TemporalWorkerRateLimits
 }
 
 // #TEMPORAL_WORKER_RATE_LIMITS_MAX_WORKER_ACTIVITIES_PER_SECOND=
@@ -90,6 +92,7 @@ const createTemporalCfg = async (): Promise<TemporalConfig> => {
             maxConcurrentLocalActivityExecutors: numOrNot('TEMPORAL_WORKER_CAPACITY_MAX_CONCURRENT_LOCAL_ACTIVITY_EXECUTORS'),
             maxConcurrentWorkflowTaskPollers: numOrNot('TEMPORAL_WORKER_CAPACITY_MAX_CONCURRENT_WORKFLOW_TASK_POLLERS'),
             maxConcurrentActivityTaskPollers: numOrNot('TEMPORAL_WORKER_CAPACITY_MAX_CONCURRENT_ACTIVITY_TASK_POLLERS'),
+            maxCachedWorkflows: numOrNot('TEMPORAL_WORKER_CAPACITY_MAX_CACHED_WORKFLOWS'),
         },
         name: '',
         rateLimits: {
