@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "codegen": "graphql-codegen --config codegen.ts",
-    "sse-server-loaded": "node --loader ts-node/esm sse-server.ts"
+    "sse-server": "tsx sse-server.ts"
   },
   "author": "",
   "license": "ISC",
@@ -23,13 +23,13 @@
     "@graphql-tools/schema": "^10.0.3",
     "@graphql-typed-document-node/core": "^3.2.0",
     "graphql": "^16.8.1",
-    "graphql-sse": "^2.5.2",
-    "ts-node": "^10.9.2"
+    "graphql-sse": "^2.5.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.20",
     "mkcert": "^3.2.0",
     "tslib": "^2.6.2",
+    "tsx": "^4.7.2",
     "typescript": "^5.3.3"
   }
 }

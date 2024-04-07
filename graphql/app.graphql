@@ -1,0 +1,13 @@
+type ReplyResponse {
+    value: String
+}
+input ExecuteWorkflowRequest {
+    value: String
+}
+
+type Mutation {
+    executeWorkflow(input: ExecuteWorkflowRequest): ReplyResponse
+}
+type Query {
+    replyResponse: ReplyResponse
+}

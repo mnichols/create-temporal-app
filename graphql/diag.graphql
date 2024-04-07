@@ -7,9 +7,11 @@ type Pong {
 type Query {
     pong(input: PingInput): Pong
 }
+
 input DoPingInput {
     value: String
 }
+
 type Mutation {
     doPing(input: DoPingInput):Pong
 }

@@ -18,8 +18,8 @@ const schema = makeExecutableSchema({
 console.log(printSchema(typeDefs));
 
 const options = {
-    key: fs.readFileSync('../../localhost-key.pem'),
-    cert: fs.readFileSync('../../localhost.pem'),
+    key: fs.readFileSync('../../localhost-client-key.pem'),
+    cert: fs.readFileSync('../../localhost-client.pem'),
 };
 
 //Create the GraphQL over SSE handler
