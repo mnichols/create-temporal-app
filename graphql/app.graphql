@@ -1,13 +1,69 @@
-type ReplyResponse {
+type ExecuteWorkflowState {
     value: String!
+    validation: ValidateResponse
+    applicationMutation1: MutateApplicationResponse
+    applicationMutation2: MutateApplicationResponse
+    compensation: CompensateResponse
+    beginning: BeginResponse
+    finalization: FinalizeResponse
 }
 input ExecuteWorkflowRequest {
     value: String!
 }
 
+input ValidateRequest {
+    value: String!
+}
+type ValidateResponse {
+    value: String!
+}
+
+input MutateApplicationRequest {
+    value: String!
+}
+type MutateApplicationResponse {
+    value: String!
+}
+
+input CompensateRequest {
+    value: String!
+}
+type CompensateResponse {
+    value: String!
+}
+
+input ReplyRequest {
+    value: String!
+}
+type ReplyResponse {
+    value: String!
+}
+
+input BeginRequest {
+    value: String!
+}
+type BeginResponse {
+    value: String!
+}
+
+input FinalizeRequest {
+    value: String!
+}
+type FinalizeResponse {
+    value: String!
+}
+
+input QueryRequest {
+    value: String!
+}
+type QueryResponse {
+    value: String!
+}
+
 type Mutation {
     executeWorkflow(input: ExecuteWorkflowRequest!): ReplyResponse!
+    finalizeRequest(input: FinalizeRequest!): FinalizeResponse!
 }
 type Query {
-    replyResponse: ReplyResponse
+    queryWorkflow(input: QueryRequest): ExecuteWorkflowState!
 }
