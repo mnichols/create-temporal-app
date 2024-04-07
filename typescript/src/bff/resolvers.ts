@@ -2,9 +2,9 @@ import {ExecuteWorkflowRequest, ReplyResponse, Resolvers} from '../gql/index.js'
 
 export const resolvers: Resolvers = {
     Mutation: {
-        executeWorkflow: (input: ExecuteWorkflowRequest): ReplyResponse => {
-            const val = JSON.parse(JSON.stringify(input))
-            return {value: val.value}
+        executeWorkflow: (args: ExecuteWorkflowRequest): ReplyResponse => {
+            console.log('args', args)
+            return {value: args.value || 'why is this null'}
         }
         // executeWorkflow: (input: ExecuteWorkflowRequest): ReplyResponse => {
         //     const value: String = input.value

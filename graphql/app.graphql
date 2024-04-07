@@ -1,12 +1,12 @@
 type ReplyResponse {
-    value: String
+    value: String!
 }
 input ExecuteWorkflowRequest {
-    value: String
+    value: String!
 }
 
 type Mutation {
-    executeWorkflow(input: ExecuteWorkflowRequest): ReplyResponse
+    executeWorkflow(fart: ExecuteWorkflowRequest!): ReplyResponse!
 }
 type Query {
     replyResponse: ReplyResponse

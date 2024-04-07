@@ -6,6 +6,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -16,17 +17,17 @@ export type Scalars = {
 };
 
 export type ExecuteWorkflowRequest = {
-  value?: InputMaybe<Scalars['String']['input']>;
+  value: Scalars['String']['input'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  executeWorkflow?: Maybe<ReplyResponse>;
+  executeWorkflow: ReplyResponse;
 };
 
 
 export type MutationExecuteWorkflowArgs = {
-  input?: InputMaybe<ExecuteWorkflowRequest>;
+  fart: ExecuteWorkflowRequest;
 };
 
 export type Query = {
@@ -36,7 +37,7 @@ export type Query = {
 
 export type ReplyResponse = {
   __typename?: 'ReplyResponse';
-  value?: Maybe<Scalars['String']['output']>;
+  value: Scalars['String']['output'];
 };
 
 
@@ -129,7 +130,7 @@ export type ResolversParentTypes = {
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  executeWorkflow?: Resolver<Maybe<ResolversTypes['ReplyResponse']>, ParentType, ContextType, Partial<MutationExecuteWorkflowArgs>>;
+  executeWorkflow?: Resolver<ResolversTypes['ReplyResponse'], ParentType, ContextType, RequireFields<MutationExecuteWorkflowArgs, 'fart'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -137,7 +138,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type ReplyResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReplyResponse'] = ResolversParentTypes['ReplyResponse']> = {
-  value?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
