@@ -29,8 +29,8 @@ var app = express()
 app.use(
     "/graphql",
     createHandler({
-        schema: typeDefs,
-        rootValue: {...resolvers.Query, ...resolvers.Mutation},
+        schema,
+        //rootValue: {...resolvers.Query, ...resolvers.Mutation},
     })
 )
 

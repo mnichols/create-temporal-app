@@ -27,7 +27,7 @@ export type Mutation = {
 
 
 export type MutationExecuteWorkflowArgs = {
-  fart: ExecuteWorkflowRequest;
+  input: ExecuteWorkflowRequest;
 };
 
 export type Query = {
@@ -130,7 +130,7 @@ export type ResolversParentTypes = {
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  executeWorkflow?: Resolver<ResolversTypes['ReplyResponse'], ParentType, ContextType, RequireFields<MutationExecuteWorkflowArgs, 'fart'>>;
+  executeWorkflow?: Resolver<ResolversTypes['ReplyResponse'], ParentType, ContextType, RequireFields<MutationExecuteWorkflowArgs, 'input'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {

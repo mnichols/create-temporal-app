@@ -6,7 +6,7 @@ input ExecuteWorkflowRequest {
 }
 
 type Mutation {
-    executeWorkflow(fart: ExecuteWorkflowRequest!): ReplyResponse!
+    executeWorkflow(input: ExecuteWorkflowRequest!): ReplyResponse!
 }
 type Query {
     replyResponse: ReplyResponse
