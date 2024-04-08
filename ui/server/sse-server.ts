@@ -8,7 +8,7 @@ import fs from 'fs'
 import {makeExecutableSchema} from '@graphql-tools/schema/makeExecutableSchema'
 import {resolvers} from './resolvers.js'
 
-const typeDefs = loadSchemaSync("../../graphql/schema.graphql", {
+const typeDefs = loadSchemaSync("../../graphql/diag.graphql", {
     loaders: [new GraphQLFileLoader()],
 });
 const schema = makeExecutableSchema({
