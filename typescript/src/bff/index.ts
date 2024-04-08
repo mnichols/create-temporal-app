@@ -4,9 +4,12 @@ import {printSchema} from 'graphql'
 import {GraphQLFileLoader} from '@graphql-tools/graphql-file-loader'
 import {loadSchemaSync} from '@graphql-tools/load'
 import {makeExecutableSchema} from '@graphql-tools/schema/makeExecutableSchema'
-import {resolvers} from './resolvers.js'
+import {createResolvers} from './resolvers.js'
 import {ruruHTML} from "ruru/server";
+import {createClient} from '../clients/temporal/index.js'
+import {cfg} from '../config/index.js'
 
+const resolvers = createResolvers(await createClient(cfg.Temporal))
 /*
 https://graphql.org/graphql-js/running-an-express-graphql-server/
  */
