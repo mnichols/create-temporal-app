@@ -61,9 +61,10 @@ You can learn how to leverage GraphQL Subscriptions by visiting the [diag pages]
 Support for a [simple "ping pong" subscription](ui/web/src/lib/operations/subscriptions/pingsub.graphql) can be done by:
 
 1. `cd <ROOT>/ui/server`
-1. `npm run sse-server-loaded`
+1. `npm start`
     1. Starts a SSE Server that emits current time prepended by subscription input args
 1. `cd <ROOT>/ui/web`
+1. `npm run dev`
 
 Visit the page at `https://localhost:<port>/diag`.
 

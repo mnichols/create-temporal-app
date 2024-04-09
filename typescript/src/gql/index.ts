@@ -35,6 +35,7 @@ export type CompensateResponse = {
 };
 
 export type ExecuteWorkflowRequest = {
+  reply?: InputMaybe<ReplyRequest>;
   value: Scalars['String']['input'];
 };
 
@@ -44,7 +45,9 @@ export type ExecuteWorkflowState = {
   applicationMutation2?: Maybe<MutateApplicationResponse>;
   beginning?: Maybe<BeginResponse>;
   compensation?: Maybe<CompensateResponse>;
+  finalizable?: Maybe<MarkFinalizable>;
   finalization?: Maybe<FinalizeResponse>;
+  reply?: Maybe<ReplyResponse>;
   validation?: Maybe<ValidateResponse>;
   value: Scalars['String']['output'];
 };
@@ -55,6 +58,11 @@ export type FinalizeRequest = {
 
 export type FinalizeResponse = {
   __typename?: 'FinalizeResponse';
+  value: Scalars['String']['output'];
+};
+
+export type MarkFinalizable = {
+  __typename?: 'MarkFinalizable';
   value: Scalars['String']['output'];
 };
 
@@ -103,6 +111,8 @@ export type QueryResponse = {
 };
 
 export type ReplyRequest = {
+  activityName: Scalars['String']['input'];
+  taskQueue: Scalars['String']['input'];
   value: Scalars['String']['input'];
 };
 
@@ -200,6 +210,7 @@ export type ResolversTypes = {
   ExecuteWorkflowState: ResolverTypeWrapper<ExecuteWorkflowState>;
   FinalizeRequest: FinalizeRequest;
   FinalizeResponse: ResolverTypeWrapper<FinalizeResponse>;
+  MarkFinalizable: ResolverTypeWrapper<MarkFinalizable>;
   MutateApplicationRequest: MutateApplicationRequest;
   MutateApplicationResponse: ResolverTypeWrapper<MutateApplicationResponse>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -224,6 +235,7 @@ export type ResolversParentTypes = {
   ExecuteWorkflowState: ExecuteWorkflowState;
   FinalizeRequest: FinalizeRequest;
   FinalizeResponse: FinalizeResponse;
+  MarkFinalizable: MarkFinalizable;
   MutateApplicationRequest: MutateApplicationRequest;
   MutateApplicationResponse: MutateApplicationResponse;
   Mutation: {};
@@ -252,13 +264,20 @@ export type ExecuteWorkflowStateResolvers<ContextType = any, ParentType extends 
   applicationMutation2?: Resolver<Maybe<ResolversTypes['MutateApplicationResponse']>, ParentType, ContextType>;
   beginning?: Resolver<Maybe<ResolversTypes['BeginResponse']>, ParentType, ContextType>;
   compensation?: Resolver<Maybe<ResolversTypes['CompensateResponse']>, ParentType, ContextType>;
+  finalizable?: Resolver<Maybe<ResolversTypes['MarkFinalizable']>, ParentType, ContextType>;
   finalization?: Resolver<Maybe<ResolversTypes['FinalizeResponse']>, ParentType, ContextType>;
+  reply?: Resolver<Maybe<ResolversTypes['ReplyResponse']>, ParentType, ContextType>;
   validation?: Resolver<Maybe<ResolversTypes['ValidateResponse']>, ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type FinalizeResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['FinalizeResponse'] = ResolversParentTypes['FinalizeResponse']> = {
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MarkFinalizableResolvers<ContextType = any, ParentType extends ResolversParentTypes['MarkFinalizable'] = ResolversParentTypes['MarkFinalizable']> = {
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -297,6 +316,7 @@ export type Resolvers<ContextType = any> = {
   CompensateResponse?: CompensateResponseResolvers<ContextType>;
   ExecuteWorkflowState?: ExecuteWorkflowStateResolvers<ContextType>;
   FinalizeResponse?: FinalizeResponseResolvers<ContextType>;
+  MarkFinalizable?: MarkFinalizableResolvers<ContextType>;
   MutateApplicationResponse?: MutateApplicationResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

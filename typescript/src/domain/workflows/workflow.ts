@@ -1,11 +1,14 @@
 import type * as activities from './activities.js'
 import {compensate} from './activities.js'
 import {ExecuteWorkflowRequest, ExecuteWorkflowState, QueryQueryWorkflowArgs} from '../../gql/index.js'
-import {defineQuery, proxyActivities, setHandler} from '@temporalio/workflow'
+import {condition, defineQuery, proxyActivities, setHandler} from '@temporalio/workflow'
+
 
 const {
     validate,
-    mutateApplication
+    mutateApplication,
+    begin,
+    finalize,
 } = proxyActivities<typeof activities>({
     startToCloseTimeout: '10 seconds',
 })
@@ -13,7 +16,7 @@ const {
 export const queryExecuteWorkflowState =
     defineQuery<ExecuteWorkflowState, [QueryQueryWorkflowArgs]>('queryWorkflow')
 
-export async function executeWorkflow(params: ExecuteWorkflowRequest): Promise<void> {
+export async function executeWorkflow(params: ExecuteWorkflowRequest): Promise<ExecuteWorkflowState> {
     const currentState: ExecuteWorkflowState = {
         value: params.value,
         validation: undefined,
@@ -35,4 +38,16 @@ export async function executeWorkflow(params: ExecuteWorkflowRequest): Promise<v
         throw err
     }
 
+    if (params.reply) {
+        const reply = proxyActivities({
+            taskQueue: params.reply.taskQueue,
+            startToCloseTimeout: '10 seconds',
+        })
+
+        currentState.reply = await reply[params.reply.activityName](params.reply)
+    }
+    currentState.beginning = await begin(params)
+    await condition(() => !!currentState.finalizable?.value, 1000 * 60)
+    currentState.finalization = await finalize(params)
+    return currentState
 }

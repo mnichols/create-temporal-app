@@ -4,11 +4,15 @@ type ExecuteWorkflowState {
     applicationMutation1: MutateApplicationResponse
     applicationMutation2: MutateApplicationResponse
     compensation: CompensateResponse
+    reply: ReplyResponse
     beginning: BeginResponse
+    finalizable: MarkFinalizable
     finalization: FinalizeResponse
 }
+
 input ExecuteWorkflowRequest {
     value: String!
+    reply: ReplyRequest
 }
 
 input ValidateRequest {
@@ -34,6 +38,8 @@ type CompensateResponse {
 
 input ReplyRequest {
     value: String!
+    taskQueue: String!
+    activityName: String!
 }
 type ReplyResponse {
     value: String!
@@ -46,6 +52,9 @@ type BeginResponse {
     value: String!
 }
 
+type MarkFinalizable {
+    value: String!
+}
 input FinalizeRequest {
     value: String!
 }

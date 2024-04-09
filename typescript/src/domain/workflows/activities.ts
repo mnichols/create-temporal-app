@@ -2,6 +2,7 @@ import {
     BeginRequest,
     CompensateRequest,
     CompensateResponse,
+    FinalizeRequest,
     MutateApplicationRequest,
     MutateApplicationResponse,
     QueryRequest,
@@ -30,3 +31,6 @@ export async function begin(params: BeginRequest): Promise<BeginRequest> {
     return {value: params.value}
 }
 
+export async function finalize(params: FinalizeRequest): Promise<FinalizeRequest> {
+    return {value: params.value}
+}
