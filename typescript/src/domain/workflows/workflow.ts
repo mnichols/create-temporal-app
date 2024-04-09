@@ -1,7 +1,7 @@
 import type * as activities from './activities.js'
 import {compensate} from './activities.js'
-import {ExecuteWorkflowRequest, ExecuteWorkflowState, QueryQueryWorkflowArgs} from '../../gql/index.js'
-import {condition, defineQuery, proxyActivities, setHandler} from '@temporalio/workflow'
+import {ExecuteWorkflowRequest, ExecuteWorkflowState, MarkFinalizable, QueryQueryWorkflowArgs} from '../../gql/index.js'
+import {condition, defineQuery, defineSignal, proxyActivities, setHandler} from '@temporalio/workflow'
 
 
 const {
@@ -13,8 +13,12 @@ const {
     startToCloseTimeout: '10 seconds',
 })
 
-export const queryExecuteWorkflowState =
-    defineQuery<ExecuteWorkflowState, [QueryQueryWorkflowArgs]>('queryWorkflow')
+const signalMarkFinalizable = 'markFinalizable'
+const queryCurrentWorkflowState = 'currentState'
+const currentWorkflowStateQueryDef =
+    defineQuery<ExecuteWorkflowState, [QueryQueryWorkflowArgs]>(queryCurrentWorkflowState)
+
+const markFinalizableSignalDef = defineSignal<[MarkFinalizable]>(signalMarkFinalizable)
 
 export async function executeWorkflow(params: ExecuteWorkflowRequest): Promise<ExecuteWorkflowState> {
     const currentState: ExecuteWorkflowState = {
@@ -25,10 +29,13 @@ export async function executeWorkflow(params: ExecuteWorkflowRequest): Promise<E
         compensation: undefined,
         beginning: undefined,
         finalization: undefined,
+        finalizable: undefined,
     }
 
-    setHandler(queryExecuteWorkflowState, (params: QueryQueryWorkflowArgs) => currentState)
-
+    setHandler(currentWorkflowStateQueryDef, (params: QueryQueryWorkflowArgs) => currentState)
+    setHandler(markFinalizableSignalDef, (signalValue: MarkFinalizable) => {
+        currentState.finalizable = signalValue
+    })
     try {
         currentState.validation = await validate(params)
         currentState.applicationMutation1 = await mutateApplication(params)
