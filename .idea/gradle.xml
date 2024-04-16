@@ -10,6 +10,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/java" />
+            <option value="$PROJECT_DIR$/java/bff" />
+            <option value="$PROJECT_DIR$/java/domain" />
           </set>
         </option>
       </GradleProjectSettings>

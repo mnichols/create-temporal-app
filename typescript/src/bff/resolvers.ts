@@ -2,7 +2,7 @@ import {
     ExecuteWorkflowState,
     FinalizeResponse,
     MutationExecuteWorkflowArgs,
-    MutationFinalizeRequestArgs,
+    MutationMarkFinalizableArgs,
     QueryQueryWorkflowArgs,
     ReplyResponse,
     Resolvers
@@ -22,7 +22,7 @@ export const createResolvers = (client: Client): Resolvers => {
                 })
                 return {value: args.input.value}
             },
-            finalizeRequest: async (_, args: Required<MutationFinalizeRequestArgs>): Promise<FinalizeResponse> => {
+            markFinalizable: async (_, args: Required<MutationMarkFinalizableArgs>): Promise<FinalizeResponse> => {
                 return {value: args.input.value}
             }
         },

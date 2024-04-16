@@ -1,3 +1,11 @@
+type TemporalConnection {
+    namespace: String!
+    taskQueue: String
+}
+type AppInfo {
+    temporal: TemporalConnection!
+}
+
 type ExecuteWorkflowState {
     value: String!
     validation: ValidateResponse
@@ -52,7 +60,7 @@ type BeginResponse {
     value: String!
 }
 
-type MarkFinalizable {
+input MarkFinalizable {
     value: String!
 }
 input FinalizeRequest {
@@ -71,8 +79,9 @@ type QueryResponse {
 
 type Mutation {
     executeWorkflow(input: ExecuteWorkflowRequest!): ReplyResponse!
-    finalizeRequest(input: FinalizeRequest!): FinalizeResponse!
+    markFinalizable(input: MarkFinalizable!): FinalizeResponse!
 }
 type Query {
+    appInfo: AppInfo!
     queryWorkflow(input: QueryRequest): ExecuteWorkflowState!
 }

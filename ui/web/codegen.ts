@@ -1,7 +1,7 @@
 import type {CodegenConfig} from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-    schema: ['../../graphql/diag.graphql'],
+    schema: ['../../graphql/diag.graphql', '../../graphql/app.graphql'],
     documents: ['src/**/*.svelte', 'src/lib/operations/**/*.graphql'],
     ignoreNoDocuments: true,
     generates: {

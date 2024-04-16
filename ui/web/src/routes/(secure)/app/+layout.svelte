@@ -1,9 +1,16 @@
 <script>
-    import HolyGrail from "$lib/components/layouts/HolyGrail.svelte";
+    import HolyGrail from "$lib/components/layouts/HolyGrail.svelte"
+    import temporalCloud from '$lib/images/temporal-cloud.png'
+    import {settings} from "$lib/stores/settings.js";
 </script>
 
 <HolyGrail>
     <div slot='header'>
+        <div class="corner">
+            <a href="https://cloud.temporal.io/namespaces/{settings.temporal.namespace}" target="_blank">
+                <img src={temporalCloud} alt="Temporal Cloud"/>
+            </a>
+        </div>
         <h1>My Application</h1>
     </div>
     <div slot='left-col'></div>

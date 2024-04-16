@@ -62,8 +62,7 @@ export type FinalizeResponse = {
 };
 
 export type MarkFinalizable = {
-  __typename?: 'MarkFinalizable';
-  value: Scalars['String']['output'];
+  value: Scalars['String']['input'];
 };
 
 export type MutateApplicationRequest = {
@@ -78,7 +77,7 @@ export type MutateApplicationResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   executeWorkflow: ReplyResponse;
-  finalizeRequest: FinalizeResponse;
+  markFinalizable: FinalizeResponse;
 };
 
 
@@ -87,8 +86,8 @@ export type MutationExecuteWorkflowArgs = {
 };
 
 
-export type MutationFinalizeRequestArgs = {
-  input: FinalizeRequest;
+export type MutationMarkFinalizableArgs = {
+  input: MarkFinalizable;
 };
 
 export type Query = {
@@ -210,7 +209,7 @@ export type ResolversTypes = {
   ExecuteWorkflowState: ResolverTypeWrapper<ExecuteWorkflowState>;
   FinalizeRequest: FinalizeRequest;
   FinalizeResponse: ResolverTypeWrapper<FinalizeResponse>;
-  MarkFinalizable: ResolverTypeWrapper<MarkFinalizable>;
+  MarkFinalizable: MarkFinalizable;
   MutateApplicationRequest: MutateApplicationRequest;
   MutateApplicationResponse: ResolverTypeWrapper<MutateApplicationResponse>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -277,11 +276,6 @@ export type FinalizeResponseResolvers<ContextType = any, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MarkFinalizableResolvers<ContextType = any, ParentType extends ResolversParentTypes['MarkFinalizable'] = ResolversParentTypes['MarkFinalizable']> = {
-  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type MutateApplicationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['MutateApplicationResponse'] = ResolversParentTypes['MutateApplicationResponse']> = {
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -289,7 +283,7 @@ export type MutateApplicationResponseResolvers<ContextType = any, ParentType ext
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   executeWorkflow?: Resolver<ResolversTypes['ReplyResponse'], ParentType, ContextType, RequireFields<MutationExecuteWorkflowArgs, 'input'>>;
-  finalizeRequest?: Resolver<ResolversTypes['FinalizeResponse'], ParentType, ContextType, RequireFields<MutationFinalizeRequestArgs, 'input'>>;
+  markFinalizable?: Resolver<ResolversTypes['FinalizeResponse'], ParentType, ContextType, RequireFields<MutationMarkFinalizableArgs, 'input'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -316,7 +310,6 @@ export type Resolvers<ContextType = any> = {
   CompensateResponse?: CompensateResponseResolvers<ContextType>;
   ExecuteWorkflowState?: ExecuteWorkflowStateResolvers<ContextType>;
   FinalizeResponse?: FinalizeResponseResolvers<ContextType>;
-  MarkFinalizable?: MarkFinalizableResolvers<ContextType>;
   MutateApplicationResponse?: MutateApplicationResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

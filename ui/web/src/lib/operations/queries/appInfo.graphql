@@ -1,0 +1,8 @@
+query AppInfo() {
+    appInfo() {
+        temporal {
+            namespace
+            taskQueue
+        }
+    }
+}

@@ -1,4 +1,19 @@
-import {writable} from 'svelte/store'
+import {derived, get, type Readable, type Updater, type Writable, writable} from 'svelte/store'
+import {getContextClient, queryStore} from '@urql/svelte'
+import {AppInfo, AppInfoDocument} from '$gql'
+import type {Client} from '@urql/core'
+import Settings from '$lib/components/settings/Settings.svelte'
+
+interface Settings {
+    theme: string,
+    temporal: {
+        taskQueue?: string,
+        namespace: string
+    }
+}
+
+export interface SettingsStore extends Writable<Settings> {
+}
 
 export const themes = [
     'light',
@@ -34,13 +49,48 @@ export const themes = [
     // 'nord',
     // 'sunset',
 ]
-export const settings = writable({
-    theme: themes[0],
-    apiRootUrl: 'https://spacex-production.up.railway.app',
-    temporalOptions: {
-        taskQueue: '',
-        namespace: '',
-    }
-})
 
-settings.subscribe((value) => console.debug(JSON.stringify(value)))
+export const createSettings = (client: Client): Writable<Settings> => {
+    const appInfo = queryStore({
+        client: getContextClient(),
+        query: AppInfoDocument,
+    })
+    const uiSettings = writable({
+        theme: themes[0]
+    })
+    const appInfoStore = writable<AppInfo>({
+        temporal: {
+            namespace: '',
+            taskQueue: '',
+        }
+    })
+    appInfo.subscribe(val => {
+        appInfoStore.set({
+            temporal: val?.data?.temporal
+        })
+    })
+    let store: Readable<Settings> = derived([uiSettings, appInfoStore], ([$ui, $appInfo], set) => {
+        set({
+            theme: $ui.theme,
+            temporal: {
+                taskQueue: $appInfo?.data?.appInfo?.temporal?.taskQueue,
+                namespace: $appInfo?.data?.appInfo?.temporal?.namespace,
+            }
+        })
+    })
+    const set = (val: Settings) => {
+        uiSettings.set({theme: val.theme})
+        appInfoStore.set(val)
+    }
+
+    return {
+        set,
+        subscribe: store.subscribe,
+        update(updater: Updater<Settings>): void {
+            const data = updater(get(store))
+            set(data)
+        }
+
+    }
+
+}

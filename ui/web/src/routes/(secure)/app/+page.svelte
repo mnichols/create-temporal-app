@@ -1,6 +1,15 @@
-<h1>Secure Page</h1>
-<p>Create your package using @sveltejs/package and preview/showcase your work with SvelteKit</p>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang='ts'>
+    function executeWorkflow(e) {
+        const formData = new FormData(e.target);
+        const data = {};
+        console.log('form', data)
+    }
+</script>
 
-
-<button class='btn accent-green-50'>food</button>
+<form on:submit|preventDefault={executeWorkflow}>
+    <label for='workflow-value'>
+        <span>Value</span>
+        <input type='text' name='workflow-value' placeholder='Type here' class='input w-full max-w-xs'/>
+    </label>
+    <button type='submit' class='btn accent-green-200'>Start Workflow</button>
+</form>
