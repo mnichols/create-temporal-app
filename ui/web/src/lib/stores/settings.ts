@@ -1,8 +1,10 @@
 import {derived, get, type Readable, type Updater, type Writable, writable} from 'svelte/store'
-import {getContextClient, queryStore} from '@urql/svelte'
-import {AppInfo, AppInfoDocument} from '$gql'
+import {type AppInfo, AppInfoDocument} from '$gql'
 import type {Client} from '@urql/core'
-import Settings from '$lib/components/settings/Settings.svelte'
+import {getContextClient, queryStore} from '@urql/svelte'
+import {getContext, setContext} from 'svelte'
+
+const _contextKey = '$$_settings'
 
 interface Settings {
     theme: string,
@@ -50,7 +52,16 @@ export const themes = [
     // 'sunset',
 ]
 
-export const createSettings = (client: Client): Writable<Settings> => {
+export const getContextSettings = (): SettingsStore => {
+    const out = getContext(_contextKey)
+
+    return out as SettingsStore
+}
+export const setContextSettings = (settings: SettingsStore): SettingsStore => {
+    setContext(_contextKey, settings)
+    return settings
+}
+export const createSettings = (client: Client): SettingsStore => {
     const appInfo = queryStore({
         client: getContextClient(),
         query: AppInfoDocument,
@@ -65,8 +76,9 @@ export const createSettings = (client: Client): Writable<Settings> => {
         }
     })
     appInfo.subscribe(val => {
+        console.log('settingAppInfo', val.data?.appInfo?.temporal)
         appInfoStore.set({
-            temporal: val?.data?.temporal
+            temporal: val?.data?.appInfo?.temporal
         })
     })
     let store: Readable<Settings> = derived([uiSettings, appInfoStore], ([$ui, $appInfo], set) => {
@@ -79,6 +91,7 @@ export const createSettings = (client: Client): Writable<Settings> => {
         })
     })
     const set = (val: Settings) => {
+        console.log('set operation', val.temporal)
         uiSettings.set({theme: val.theme})
         appInfoStore.set(val)
     }

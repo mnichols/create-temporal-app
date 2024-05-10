@@ -13,6 +13,7 @@ export default defineConfig({
     resolve: {
         alias: {
             $lib: './src/lib',
+            $gql: './src/gql'
         }
     },
     build: {

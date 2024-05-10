@@ -1,3 +1,4 @@
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -52,7 +53,6 @@ export type ExecuteWorkflowState = {
   applicationMutation2?: Maybe<MutateApplicationResponse>;
   beginning?: Maybe<BeginResponse>;
   compensation?: Maybe<CompensateResponse>;
-  finalizable?: Maybe<MarkFinalizable>;
   finalization?: Maybe<FinalizeResponse>;
   reply?: Maybe<ReplyResponse>;
   validation?: Maybe<ValidateResponse>;
@@ -177,3 +177,19 @@ export type ValidateResponse = {
   __typename?: 'ValidateResponse';
   value: Scalars['String']['output'];
 };
+
+export type AppInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AppInfoQuery = { __typename?: 'Query', appInfo: { __typename?: 'AppInfo', temporal: { __typename?: 'TemporalConnection', namespace: string, taskQueue?: string | null } } };
+
+export type SubPingSubscriptionVariables = Exact<{
+  input?: InputMaybe<SubPingInput>;
+}>;
+
+
+export type SubPingSubscription = { __typename?: 'Subscription', subPing?: { __typename?: 'Pong', value?: string | null } | null };
+
+
+export const AppInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AppInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"appInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"temporal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"namespace"}},{"kind":"Field","name":{"kind":"Name","value":"taskQueue"}}]}}]}}]}}]} as unknown as DocumentNode<AppInfoQuery, AppInfoQueryVariables>;
+export const SubPingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"SubPing"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"SubPingInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subPing"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<SubPingSubscription, SubPingSubscriptionVariables>;

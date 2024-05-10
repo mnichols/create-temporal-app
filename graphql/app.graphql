@@ -14,7 +14,7 @@ type ExecuteWorkflowState {
     compensation: CompensateResponse
     reply: ReplyResponse
     beginning: BeginResponse
-    finalizable: MarkFinalizable
+    #    finalizable: MarkFinalizable
     finalization: FinalizeResponse
 }
 

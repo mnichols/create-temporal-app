@@ -16,6 +16,11 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type AppInfo = {
+  __typename?: 'AppInfo';
+  temporal: TemporalConnection;
+};
+
 export type BeginRequest = {
   value: Scalars['String']['input'];
 };
@@ -45,7 +50,6 @@ export type ExecuteWorkflowState = {
   applicationMutation2?: Maybe<MutateApplicationResponse>;
   beginning?: Maybe<BeginResponse>;
   compensation?: Maybe<CompensateResponse>;
-  finalizable?: Maybe<MarkFinalizable>;
   finalization?: Maybe<FinalizeResponse>;
   reply?: Maybe<ReplyResponse>;
   validation?: Maybe<ValidateResponse>;
@@ -92,6 +96,7 @@ export type MutationMarkFinalizableArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  appInfo: AppInfo;
   queryWorkflow: ExecuteWorkflowState;
 };
 
@@ -118,6 +123,12 @@ export type ReplyRequest = {
 export type ReplyResponse = {
   __typename?: 'ReplyResponse';
   value: Scalars['String']['output'];
+};
+
+export type TemporalConnection = {
+  __typename?: 'TemporalConnection';
+  namespace: Scalars['String']['output'];
+  taskQueue?: Maybe<Scalars['String']['output']>;
 };
 
 export type ValidateRequest = {
@@ -200,6 +211,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  AppInfo: ResolverTypeWrapper<AppInfo>;
   BeginRequest: BeginRequest;
   BeginResponse: ResolverTypeWrapper<BeginResponse>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
@@ -219,12 +231,14 @@ export type ResolversTypes = {
   ReplyRequest: ReplyRequest;
   ReplyResponse: ResolverTypeWrapper<ReplyResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  TemporalConnection: ResolverTypeWrapper<TemporalConnection>;
   ValidateRequest: ValidateRequest;
   ValidateResponse: ResolverTypeWrapper<ValidateResponse>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  AppInfo: AppInfo;
   BeginRequest: BeginRequest;
   BeginResponse: BeginResponse;
   Boolean: Scalars['Boolean']['output'];
@@ -244,8 +258,14 @@ export type ResolversParentTypes = {
   ReplyRequest: ReplyRequest;
   ReplyResponse: ReplyResponse;
   String: Scalars['String']['output'];
+  TemporalConnection: TemporalConnection;
   ValidateRequest: ValidateRequest;
   ValidateResponse: ValidateResponse;
+};
+
+export type AppInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['AppInfo'] = ResolversParentTypes['AppInfo']> = {
+  temporal?: Resolver<ResolversTypes['TemporalConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type BeginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['BeginResponse'] = ResolversParentTypes['BeginResponse']> = {
@@ -263,7 +283,6 @@ export type ExecuteWorkflowStateResolvers<ContextType = any, ParentType extends 
   applicationMutation2?: Resolver<Maybe<ResolversTypes['MutateApplicationResponse']>, ParentType, ContextType>;
   beginning?: Resolver<Maybe<ResolversTypes['BeginResponse']>, ParentType, ContextType>;
   compensation?: Resolver<Maybe<ResolversTypes['CompensateResponse']>, ParentType, ContextType>;
-  finalizable?: Resolver<Maybe<ResolversTypes['MarkFinalizable']>, ParentType, ContextType>;
   finalization?: Resolver<Maybe<ResolversTypes['FinalizeResponse']>, ParentType, ContextType>;
   reply?: Resolver<Maybe<ResolversTypes['ReplyResponse']>, ParentType, ContextType>;
   validation?: Resolver<Maybe<ResolversTypes['ValidateResponse']>, ParentType, ContextType>;
@@ -287,6 +306,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  appInfo?: Resolver<ResolversTypes['AppInfo'], ParentType, ContextType>;
   queryWorkflow?: Resolver<ResolversTypes['ExecuteWorkflowState'], ParentType, ContextType, Partial<QueryQueryWorkflowArgs>>;
 };
 
@@ -300,12 +320,19 @@ export type ReplyResponseResolvers<ContextType = any, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type TemporalConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemporalConnection'] = ResolversParentTypes['TemporalConnection']> = {
+  namespace?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  taskQueue?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ValidateResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ValidateResponse'] = ResolversParentTypes['ValidateResponse']> = {
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
+  AppInfo?: AppInfoResolvers<ContextType>;
   BeginResponse?: BeginResponseResolvers<ContextType>;
   CompensateResponse?: CompensateResponseResolvers<ContextType>;
   ExecuteWorkflowState?: ExecuteWorkflowStateResolvers<ContextType>;
@@ -315,6 +342,7 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   QueryResponse?: QueryResponseResolvers<ContextType>;
   ReplyResponse?: ReplyResponseResolvers<ContextType>;
+  TemporalConnection?: TemporalConnectionResolvers<ContextType>;
   ValidateResponse?: ValidateResponseResolvers<ContextType>;
 };
 

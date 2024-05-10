@@ -5,9 +5,10 @@ export const createCacheExchange = () => {
         // specify custom keys
         // https://formidable.com/open-source/urql/docs/graphcache/normalized-caching/#custom-keys-and-non-keyable-entities
         keys: {
-            Prescription: data => data.prescriptionId,
-            Physician: data => data.physicianId,
-            Medication: data => data.medicationId,
+            AppInfo: () => null,
+            // Prescription: data => data.prescriptionId,
+            // Physician: data => data.physicianId,
+            // Medication: data => data.medicationId,
         },
     })
     return cache

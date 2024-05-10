@@ -8,6 +8,9 @@ import {createResolvers} from './resolvers.js'
 import {ruruHTML} from "ruru/server";
 import {createClient} from '../clients/temporal/index.js'
 import {cfg} from '../config/index.js'
+import fs from 'fs'
+import https from 'https'
+import cors from 'cors'
 
 const resolvers = createResolvers(await createClient(cfg.Temporal))
 /*
@@ -26,7 +29,7 @@ const schema = makeExecutableSchema({
 console.log(printSchema(typeDefs));
 
 var app = express()
-
+app.use(cors())
 
 // Create and use the GraphQL handler.
 app.use(
@@ -44,5 +47,11 @@ app.get("/", (_req: any, res: any) => {
 })
 
 // Start the server at port
-app.listen(4000)
-console.log("Running a GraphQL API server at http://localhost:4000/graphql")
+const options = {
+    key: fs.readFileSync('../localhost-client-key.pem'),
+    cert: fs.readFileSync('../localhost-client.pem'),
+};
+const httpsServer = https.createServer(options, app)
+httpsServer.listen(4000, () => {
+    console.log("Running a GraphQL API server at https://localhost:4000/graphql")
+})

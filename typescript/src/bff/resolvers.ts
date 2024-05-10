@@ -1,4 +1,5 @@
 import {
+    AppInfo,
     ExecuteWorkflowState,
     FinalizeResponse,
     MutationExecuteWorkflowArgs,
@@ -29,7 +30,15 @@ export const createResolvers = (client: Client): Resolvers => {
         Query: {
             queryWorkflow: async (_, args: QueryQueryWorkflowArgs): Promise<ExecuteWorkflowState> => {
                 return {value: args.input?.value || 'no value'}
+            }, appInfo: async (_: {}): Promise<AppInfo> => {
+                return {
+
+                    temporal: {
+                        namespace: 'foo'
+                    }
+                }
             }
+
         }
     }
     return res
