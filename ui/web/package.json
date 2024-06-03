@@ -13,7 +13,7 @@
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "test:integration": "playwright test",
-    "test:unit": "vitest",
+    "test:unit": "TZ=UTC vitest",
     "codegen": "graphql-codegen --config codegen.ts",
     "codegenold": "export NODE_OPTIONS=\"--loader ts-node/esm\" && node codegen.ts && graphql-codegen-esm --config codegen.yml"
   },

@@ -51,6 +51,16 @@ The UI is all in on [roarr](https://github.com/gajus/roarr).
 
 Set environment variables with `.env` in the `ui/web` root.
 
+### Testing The UI
+
+We use `vitest` to test our UI.
+The `describe`, `beforeEach`, etc are globally available because we drop the `types`
+to `vitest/global` [here](ui/web/tsconfig.json).
+Be sure you have the `global:true` in your `test.globals` set up in
+your `vitest.config.ts` [also](ui/web/vitest.config.ts).
+
+We need to expose the `types` config in
+
 ### Diagnostics
 
 #### GraphQL Subscriptions
@@ -79,3 +89,4 @@ You must provide a `PUBLIC_SUBSCRIPTIONS_URL` environment variable to point to y
 - [urql Subscriptions with Svelte docs](https://commerce.nearform.com/open-source/urql/docs/advanced/subscriptions/#svelte)
 - [GraphQL-SSE client and server package](https://the-guild.dev/graphql/sse)
 - Putting urql and graphql-sse all together [here](https://the-guild.dev/graphql/sse/recipes#with-urql)
+
