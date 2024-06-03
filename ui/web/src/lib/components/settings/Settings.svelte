@@ -1,6 +1,8 @@
 <script lang='ts'>
 
-    import {settings, themes} from '$lib/stores/settings.js'
+    import {getContextSettings, themes} from '$lib/stores/settings.js'
+
+    const settings = getContextSettings()
 </script>
 <header class='mb-6 text-5xl font-bold'>
     <h1>Settings</h1>
@@ -20,28 +22,20 @@
             </div>
         </div>
     </div>
-    <div class='card w-96'>
-        <h3 class='card-title text-neutral'>API</h3>
-        <div class='card-body'>
-            <div class='form-control'>
-                <label class='label cursor-pointer'>
-                    <span class='label-text'>API Root Url</span>
-                    <input type='text' name='api-root' class='input' bind:value={$settings.apiRootUrl}/>
-                </label>
-            </div>
-        </div>
-    </div>
+
     <div class='card w-96'>
         <h3 class='card-title text-neutral'>Temporal Global Options</h3>
         <div class='card-body'>
             <div class='form-control'>
                 <label class='label cursor-pointer'>
                     <span class='label-text'>Namespace</span>
-                    <input type='text' name='api-root' class='input' bind:value={$settings.temporalOptions.namespace}/>
+                    <input type='text' name='namespace' class='input' readonly
+                           bind:value={$settings.temporal.namespace}/>
                 </label>
                 <label class='label cursor-pointer'>
                     <span class='label-text'>Task Queue</span>
-                    <input type='text' name='api-root' class='input' bind:value={$settings.temporalOptions.taskQueue}/>
+                    <input type='text' name='task-queue' class='input' readonly
+                           bind:value={$settings.temporal.taskQueue}/>
                 </label>
             </div>
         </div>

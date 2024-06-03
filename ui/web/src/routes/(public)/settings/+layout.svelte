@@ -1,6 +1,8 @@
 <script>
-    import HolyGrail from "$lib/components/layouts/HolyGrail.svelte";
-    import {settings} from "$lib/stores/settings";
+    import HolyGrail from "$lib/components/layouts/HolyGrail.svelte"
+    import {getContextSettings} from "$lib/stores/settings"
+
+    const settings = getContextSettings()
 </script>
 
 <HolyGrail>

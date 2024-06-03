@@ -82,11 +82,12 @@ export const createSettings = (client: Client): SettingsStore => {
         })
     })
     let store: Readable<Settings> = derived([uiSettings, appInfoStore], ([$ui, $appInfo], set) => {
+        console.log('appInfo right now is ', $appInfo)
         set({
             theme: $ui.theme,
             temporal: {
-                taskQueue: $appInfo?.data?.appInfo?.temporal?.taskQueue,
-                namespace: $appInfo?.data?.appInfo?.temporal?.namespace,
+                taskQueue: $appInfo?.temporal?.taskQueue,
+                namespace: $appInfo?.temporal?.namespace,
             }
         })
     })
