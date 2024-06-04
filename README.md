@@ -61,6 +61,12 @@ your `vitest.config.ts` [also](ui/web/vitest.config.ts).
 
 Note we are using the [msw](https://mswjs.io/) package for mock server testing.
 
+#### Example
+
+Check out the [mock-server-urql-integration](ui/web/src/lib/http/mock-server/mock-server-urql-integration.test.ts) to
+see
+how to stub out requests to your GraphQL API.
+
 ### Diagnostics
 
 #### GraphQL Subscriptions

@@ -1,13 +1,12 @@
-import {graphqlLink, type GraphQLResolver} from "./index";
+import {graphqlLink, type GraphQLResolver, mockServer} from "./index.js";
 import {formatISO, parseISO} from 'date-fns'
 import {queryStore} from "@urql/svelte";
-import {createTestClient} from "../urql/index";
+import {createTestClient} from "../urql/index.js";
 import type {PingInput,} from '$gql'
 import {PingTestDocument} from "$gql"
 import type {Client} from "@urql/core";
 import {beforeAll, expect} from "vitest";
 import {HttpResponse} from 'msw'
-import {mockServer} from './index.js'
 import {waitForResponse} from '$lib/http/testhelper.js'
 
 describe('given mock server', async () => {
