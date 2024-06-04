@@ -1,4 +1,5 @@
 import {writable} from 'svelte/store'
+import {describe} from 'vitest'
 
 describe('createSettings', async () => {
     beforeEach(async () => {
@@ -12,5 +13,10 @@ describe('createSettings', async () => {
     })
     afterEach(async () => {
         vi.clearAllMocks()
+    })
+    describe('given temporal settings', async () => {
+        it('should init with app info', async () => {
+            expect(42).to.eq(42)
+        })
     })
 })

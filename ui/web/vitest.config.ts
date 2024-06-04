@@ -29,11 +29,14 @@ export default defineConfig({
                 'src/lib/svelte-mocks/**/*',
                 '**/*.test.ts',
             ],
+            provider: 'istanbul'
         },
         environment: 'jsdom',
         setupFiles: ['./vitest-setup.ts'],
-        deps: {
-            inline: ['date-fns'],
-        },
+        server: {
+            deps: {
+                inline: ['date-fns'],
+            },
+        }
     },
 })

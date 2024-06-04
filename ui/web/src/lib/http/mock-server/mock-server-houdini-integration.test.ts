@@ -1,11 +1,12 @@
-import {temporalShop, use} from "./index";
-import { parseISO } from 'date-fns'
-import {createClient, queryStore} from "@urql/svelte";
+import {graphqlLink, use} from "./index";
+import {parseISO} from 'date-fns'
+import {queryStore} from "@urql/svelte";
 import {createTestClient} from "../urql/index";
+import type {PingInput,} from '$gql'
 import {PingTestDocument} from "$gql"
-import type { PingInput, } from '$gql'
 import type {Client} from "@urql/core";
 import {beforeAll} from "vitest";
+
 describe('given mock server', async () => {
     let client: Client
     beforeAll(async () => {
@@ -13,13 +14,13 @@ describe('given mock server', async () => {
     })
     it('should init', async () => {
 
-        let receivedVariables:(PingInput | undefined) = undefined
-        use(temporalShop.query('PingTest', async (req, res, ctx) => {
+        let receivedVariables: (PingInput | undefined) = undefined
+        use(graphqlLink.query('PingTest', async (req, res, ctx) => {
             receivedVariables = req.variables
-            const {input } = req.variables
-            return res.once(ctx.data({ping: { value: input?.value + ' to you', timestamp: parseISO(input?.timestamp)}}))
+            const {input} = req.variables
+            return res.once(ctx.data({ping: {value: input?.value + ' to you', timestamp: parseISO(input?.timestamp)}}))
         }))
-        let input: PingInput = { value: 'hello', timestamp: new Date(1970, 3, 5)}
+        let input: PingInput = {value: 'hello', timestamp: new Date(1970, 3, 5)}
 
         let responses = []
         let sut = queryStore({
