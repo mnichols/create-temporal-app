@@ -1,10 +1,14 @@
+scalar Time
 input PingInput {
     value: String
+    timestamp: Time
 }
 type Pong {
     value: String
+    timestamp: Time
 }
 type Query {
+    ping(input: PingInput): Pong
     pong(input: PingInput): Pong
 }
 

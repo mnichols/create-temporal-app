@@ -55,11 +55,11 @@ Set environment variables with `.env` in the `ui/web` root.
 
 We use `vitest` to test our UI.
 The `describe`, `beforeEach`, etc are globally available because we drop the `types`
-to `vitest/global` [here](ui/web/tsconfig.json).
+to `vitest/globals` [here](ui/web/tsconfig.json).
 Be sure you have the `global:true` in your `test.globals` set up in
 your `vitest.config.ts` [also](ui/web/vitest.config.ts).
 
-We need to expose the `types` config in
+Note we are using the [msw](https://mswjs.io/) package for mock server testing.
 
 ### Diagnostics
 

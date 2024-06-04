@@ -13,6 +13,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Time: { input: any; output: any; }
 };
 
 export type AppInfo = {
@@ -104,19 +105,27 @@ export type MutationMarkFinalizableArgs = {
 };
 
 export type PingInput = {
+  timestamp?: InputMaybe<Scalars['Time']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Pong = {
   __typename?: 'Pong';
+  timestamp?: Maybe<Scalars['Time']['output']>;
   value?: Maybe<Scalars['String']['output']>;
 };
 
 export type Query = {
   __typename?: 'Query';
   appInfo: AppInfo;
+  ping?: Maybe<Pong>;
   pong?: Maybe<Pong>;
   queryWorkflow: ExecuteWorkflowState;
+};
+
+
+export type QueryPingArgs = {
+  input?: InputMaybe<PingInput>;
 };
 
 
@@ -183,6 +192,13 @@ export type AppInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AppInfoQuery = { __typename?: 'Query', appInfo: { __typename?: 'AppInfo', temporal: { __typename?: 'TemporalConnection', namespace: string, taskQueue?: string | null } } };
 
+export type PingTestQueryVariables = Exact<{
+  input?: InputMaybe<PingInput>;
+}>;
+
+
+export type PingTestQuery = { __typename?: 'Query', ping?: { __typename?: 'Pong', value?: string | null, timestamp?: any | null } | null };
+
 export type SubPingSubscriptionVariables = Exact<{
   input?: InputMaybe<SubPingInput>;
 }>;
@@ -192,4 +208,5 @@ export type SubPingSubscription = { __typename?: 'Subscription', subPing?: { __t
 
 
 export const AppInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AppInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"appInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"temporal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"namespace"}},{"kind":"Field","name":{"kind":"Name","value":"taskQueue"}}]}}]}}]}}]} as unknown as DocumentNode<AppInfoQuery, AppInfoQueryVariables>;
+export const PingTestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PingTest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PingInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ping"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}}]}}]}}]} as unknown as DocumentNode<PingTestQuery, PingTestQueryVariables>;
 export const SubPingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"SubPing"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"SubPingInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subPing"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<SubPingSubscription, SubPingSubscriptionVariables>;

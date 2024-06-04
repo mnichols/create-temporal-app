@@ -1,4 +1,4 @@
-import {graphql, http as rest, HttpResponse, RequestHandler} from "msw";
+import {graphql, GraphQLVariables, http as rest, HttpResponse, RequestHandler} from "msw";
 import {setupServer} from "msw/node";
 import {PUBLIC_GRAPHQL_URL} from "$env/static/public";
 
@@ -15,4 +15,11 @@ export const createMockServer = (...handlers: Array<RequestHandler>) => {
 export const mockServer = createMockServer()
 export const use = (...handlers: Array<RequestHandler>) => {
     mockServer.use(...handlers)
+}
+
+export type GraphQLResolver<Variables extends GraphQLVariables> = {
+    query: string
+    operationName: string
+    variables: Variables
+    cookies: Record<string, string>
 }
