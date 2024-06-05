@@ -19,6 +19,6 @@
 
 </script>
 
-<div data-theme={$settings.theme} class='h-screen w-screen'>
+<div data-theme={$settings.ui.theme} class='h-screen w-screen'>
     <slot/>
 </div>

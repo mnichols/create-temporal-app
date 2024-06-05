@@ -7,7 +7,7 @@
 
 <HolyGrail>
     <div slot='header'>
-        <h1>public layout. current theme is {$settings.theme}</h1>
+        <h1>public layout. current theme is {$settings.ui.theme}</h1>
     </div>
     <div slot='left-col'></div>
 

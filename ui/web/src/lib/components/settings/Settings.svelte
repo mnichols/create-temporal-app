@@ -13,7 +13,7 @@
         <h3 class='card-title text-neutral'>Theme</h3>
         <div class='card-body'>
             <div class='form-control'>
-                <select class='select select-ghost w-full max-w-xs border-neutral' bind:value={$settings.theme}>
+                <select class='select select-ghost w-full max-w-xs border-neutral' bind:value={$settings.ui.theme}>
                     {#each themes as theme}
                         <option value={theme}>{theme}</option>
                     {/each}
@@ -30,12 +30,12 @@
                 <label class='label cursor-pointer'>
                     <span class='label-text'>Namespace</span>
                     <input type='text' name='namespace' class='input' readonly
-                           bind:value={$settings.temporal.namespace}/>
+                           bind:value={$settings.appInfo.temporal.namespace}/>
                 </label>
                 <label class='label cursor-pointer'>
                     <span class='label-text'>Task Queue</span>
                     <input type='text' name='task-queue' class='input' readonly
-                           bind:value={$settings.temporal.taskQueue}/>
+                           bind:value={$settings.appInfo.temporal.taskQueue}/>
                 </label>
             </div>
         </div>

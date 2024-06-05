@@ -6,12 +6,13 @@ import {getContext, setContext} from 'svelte'
 
 const _contextKey = '$$_settings'
 
-interface Settings {
-    theme: string,
-    temporal: {
-        taskQueue?: string,
-        namespace: string
-    }
+export interface UISettings {
+    theme: string
+}
+
+export interface Settings {
+    ui: UISettings,
+    appInfo: AppInfo,
 }
 
 export interface SettingsStore extends Writable<Settings> {
@@ -62,49 +63,36 @@ export const setContextSettings = (settings: SettingsStore): SettingsStore => {
     return settings
 }
 export const createSettings = (client: Client): SettingsStore => {
-    const appInfo = queryStore({
-        client: getContextClient(),
-        query: AppInfoDocument,
-    })
-    const uiSettings = writable({
-        theme: themes[0]
-    })
-    const appInfoStore = writable<AppInfo>({
-        temporal: {
-            namespace: '',
-            taskQueue: '',
-        }
-    })
-    appInfo.subscribe(val => {
-        console.log('settingAppInfo', val.data?.appInfo?.temporal)
-        appInfoStore.set({
-            temporal: val?.data?.appInfo?.temporal
-        })
-    })
-    let store: Readable<Settings> = derived([uiSettings, appInfoStore], ([$ui, $appInfo], set) => {
-        console.log('appInfo right now is ', $appInfo)
-        set({
-            theme: $ui.theme,
-            temporal: {
-                taskQueue: $appInfo?.temporal?.taskQueue,
-                namespace: $appInfo?.temporal?.namespace,
-            }
-        })
-    })
-    const set = (val: Settings) => {
-        console.log('set operation', val.temporal)
-        uiSettings.set({theme: val.theme})
-        appInfoStore.set(val)
+    if (!client) {
+        client = getContextClient()
     }
+    const appInfo = queryStore({
+        client,
+        query: AppInfoDocument,
+
+    })
+
+    const uiSettings: Writable<UISettings> = writable({
+        theme: themes[0],
+    })
+
+    // internal "bridge: store to force a http request with urql (appInfo store)
+    // this allows subsequent reads to our api to update this derived store below
+    const appInfoBridge: Writable<AppInfo> = writable({})
+    appInfo.subscribe(arg => {
+        appInfoBridge.set(arg.data?.appInfo)
+    })
+    const store: Readable<Settings> = derived([uiSettings, appInfoBridge], ([$ui, $appInfo], set) => {
+        set({ui: $ui, appInfo: $appInfo})
+    })
 
     return {
-        set,
-        subscribe: store.subscribe,
         update(updater: Updater<Settings>): void {
-            const data = updater(get(store))
-            set(data)
-        }
-
+            updater(get(store))
+        },
+        set: value => {
+            uiSettings.set(value.ui)
+        },
+        subscribe: store.subscribe,
     }
-
 }
