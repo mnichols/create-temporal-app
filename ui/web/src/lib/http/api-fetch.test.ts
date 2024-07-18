@@ -1,13 +1,12 @@
-import type { MockResponse } from "./testhelper";
-import { describe, expect, it, vi } from 'vitest'
-import {apiFetch, parse, csrfCookie, csrfHeader, withSecurityOptions} from './api-fetch'
-import { withCookie, createFetchMock } from "./testhelper";
+import {describe, expect, it} from 'vitest'
+import {apiFetch, csrfCookie, csrfHeader, parse, withSecurityOptions} from './api-fetch'
+import {createFetchMock, withCookie} from "$lib/http/testhelper.js";
 import apiRootResponse from '$fixtures/api-root.json'
 
 describe('withSecurityOptions', () => {
     it('should preserve passed in headers', async () => {
-        let headers = { 'x-foo': 'bar'}
-        const actual = withSecurityOptions({ headers }, true)
+        let headers = {'x-foo': 'bar'}
+        const actual = withSecurityOptions({headers}, true)
 
         let h = new Headers(actual.headers)
 
@@ -33,7 +32,7 @@ describe('apiFetch', () => {
             status: 200,
             statusText: 'ok',
         })
-        await apiFetch({url}, { request })
+        await apiFetch({url}, {request})
         expect(request).toHaveBeenCalledWith(url, defaultOpts)
     })
     it('should expand uri templates', async () => {
@@ -50,7 +49,7 @@ describe('apiFetch', () => {
             statusText: 'ok',
         })
         console.log('defaultOpts', defaultOpts)
-        await apiFetch({url: tpl, params}, { request })
+        await apiFetch({url: tpl, params}, {request})
         expect(request).toHaveBeenCalledWith('https://demo.tmprl-sa.cloud/myapp/api?opt1=foo&opt2=bar', defaultOpts)
     })
     it('should accept parsed templates', async () => {
@@ -66,7 +65,7 @@ describe('apiFetch', () => {
             status: 200,
             statusText: 'ok',
         })
-        await apiFetch({tpl: parse(tpl), params}, { request })
+        await apiFetch({tpl: parse(tpl), params}, {request})
         expect(request).toHaveBeenCalledWith('https://demo.tmprl-sa.cloud/myapp/api?opt1=foo&opt2=bar', defaultOpts)
     })
     it('should support csrf', async () => {
@@ -83,8 +82,8 @@ describe('apiFetch', () => {
             status: 200,
             statusText: 'ok',
         })
-        await withCookie(`${csrfCookie}=${token}`,  async () => {
-            await apiFetch({tpl: parse(tpl), params}, { request })
+        await withCookie(`${csrfCookie}=${token}`, async () => {
+            await apiFetch({tpl: parse(tpl), params}, {request})
         })
         let csrfOpts: any = {
             headers: {
@@ -93,7 +92,7 @@ describe('apiFetch', () => {
         }
         csrfOpts.headers[`${csrfHeader.toLowerCase()}`] = token
 
-        expect(request).toHaveBeenCalledWith('https://demo.tmprl-sa.cloud/myapp/api?opt1=foo&opt2=bar', {  ...defaultOpts, ...csrfOpts})
+        expect(request).toHaveBeenCalledWith('https://demo.tmprl-sa.cloud/myapp/api?opt1=foo&opt2=bar', {...defaultOpts, ...csrfOpts})
     })
     it('should handle errors', async () => {
         let errd: Response
@@ -123,7 +122,7 @@ describe('apiFetch', () => {
             status: 200,
             statusText: 'ok',
         })
-        let actual = await apiFetch({url}, { request })
+        let actual = await apiFetch({url}, {request})
         expect(await actual.response.json()).toEqual(apiRootResponse)
         expect(actual.response.status).toEqual(200)
     })

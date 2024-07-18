@@ -1,5 +1,6 @@
 query AppInfo {
     appInfo {
+        name,
         temporal {
             namespace
             taskQueue

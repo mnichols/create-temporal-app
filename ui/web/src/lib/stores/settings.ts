@@ -13,6 +13,7 @@ export interface UISettings {
 export interface Settings {
     ui: UISettings,
     appInfo: AppInfo,
+    ready: Boolean,
 }
 
 export interface SettingsStore extends Writable<Settings> {
@@ -78,12 +79,14 @@ export const createSettings = (client: Client): SettingsStore => {
 
     // internal "bridge: store to force a http request with urql (appInfo store)
     // this allows subsequent reads to our api to update this derived store below
-    const appInfoBridge: Writable<AppInfo> = writable({})
+    const appInfoBridge: Writable<AppInfo> = writable()
     appInfo.subscribe(arg => {
-        appInfoBridge.set(arg.data?.appInfo)
+        if (arg.data?.appInfo) {
+            appInfoBridge.set(arg.data?.appInfo)
+        }
     })
     const store: Readable<Settings> = derived([uiSettings, appInfoBridge], ([$ui, $appInfo], set) => {
-        set({ui: $ui, appInfo: $appInfo})
+        set({ui: $ui, appInfo: $appInfo, ready: !!$ui && !!$appInfo})
     })
 
     return {

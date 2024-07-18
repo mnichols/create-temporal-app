@@ -17,7 +17,7 @@ const config = {
         adapter: adapter(),
 
         alias: {
-            $gql: './src/gql',
+            $gql: './src/gql/index.js',
             $lib: './src/lib',
         }
     }

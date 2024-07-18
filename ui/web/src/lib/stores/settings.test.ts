@@ -10,6 +10,7 @@ import {HttpResponse} from 'msw'
 describe('createSettings', async () => {
     const simpleAppInfoResult = {
         appInfo: {
+            name: 'mytemporalapp',
             temporal: {
                 namespace: 'mytemporalnamespace',
             }

@@ -4,6 +4,7 @@ type TemporalConnection {
 }
 type AppInfo {
     temporal: TemporalConnection!
+    name: String!
 }
 
 type ExecuteWorkflowState {

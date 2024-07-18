@@ -32,7 +32,7 @@ export const createResolvers = (client: Client): Resolvers => {
                 return {value: args.input?.value || 'no value'}
             }, appInfo: async (_: {}): Promise<AppInfo> => {
                 return {
-
+                    name: 'Temporal Application',
                     temporal: {
                         namespace: 'foo'
                     }

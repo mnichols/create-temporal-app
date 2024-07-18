@@ -18,6 +18,7 @@ export type Scalars = {
 
 export type AppInfo = {
   __typename?: 'AppInfo';
+  name: Scalars['String']['output'];
   temporal: TemporalConnection;
 };
 
@@ -264,6 +265,7 @@ export type ResolversParentTypes = {
 };
 
 export type AppInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['AppInfo'] = ResolversParentTypes['AppInfo']> = {
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   temporal?: Resolver<ResolversTypes['TemporalConnection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
