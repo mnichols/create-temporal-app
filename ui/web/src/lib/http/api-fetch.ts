@@ -1,16 +1,15 @@
-import { browser } from '$app/environment'
-import { noop } from 'svelte/internal'
-import type { RequireAtLeastOne} from "type-fest"
-import { parse } from 'uri-template'
+import {browser} from '$app/environment'
+import type {RequireAtLeastOne} from "type-fest"
+import {parse} from 'uri-template'
 
-import { PUBLIC_API_ROOT_HOST, PUBLIC_API_ROOT_SCHEME } from '$env/static/public'
-import {Logger} from "../log";
+import {PUBLIC_API_ROOT_HOST, PUBLIC_API_ROOT_SCHEME} from '$env/static/public'
+import {Logger} from "$lib/log/index.js";
 
-export { parse }
+export {parse}
 export const csrfCookie = '_csrf'
 export const csrfHeader = 'X-CSRF-TOKEN'
 
-const HEADER_CONTENT_TYPE='content-type'
+const HEADER_CONTENT_TYPE = 'content-type'
 
 interface Expandable {
     expand(values: Record<string, unknown>): string
@@ -25,18 +24,18 @@ export type TemplatableURL = {
 export type RequiredTemplatableURL = RequireAtLeastOne<TemplatableURL, 'url' | 'tpl'>
 
 export type APIError = {
-  code: number
-  message: string
-  details: unknown[]
+    code: number
+    message: string
+    details: unknown[]
 }
 export type APIErrorResponse = {
-  status: number
-  statusText: string
-  body: APIError
+    status: number
+    statusText: string
+    body: APIError
 }
 export type ErrorCallback = (error: APIErrorResponse) => void
 
-export interface RequestOpts  {
+export interface RequestOpts {
     body?: BodyInit
     method?: string
     headers?: Headers
@@ -44,6 +43,7 @@ export interface RequestOpts  {
     onError?: ErrorCallback,
     isBrowser?: boolean,
 }
+
 export type APIResponse = {
     response: Response,
 }
@@ -57,8 +57,8 @@ export const apiFetch = async <T>(
         scheme: PUBLIC_API_ROOT_SCHEME,
         host: PUBLIC_API_ROOT_HOST,
     }
-    url.params = { ...defaultParams, ...url.params || {} }
-    if(url.url) {
+    url.params = {...defaultParams, ...url.params || {}}
+    if (url.url) {
         let tmp = parse(url.url)
         actualURL = decodeURIComponent(tmp.expand(url.params || {}))
     } else if (url.tpl) {
@@ -86,8 +86,8 @@ export const apiFetch = async <T>(
     requestOpts.headers = Object.fromEntries(new Headers(requestOpts.headers).entries())
     Logger.debug(requestOpts, 'making request to %s', actualURL)
     let res = await request(actualURL, requestOpts)
-    Logger.debug('received response [%d] from %s', res?.status,actualURL)
-    if((res.status > 399 && res.status !== 401 && res.status !== 403) && onError) {
+    Logger.debug('received response [%d] from %s', res?.status, actualURL)
+    if ((res.status > 399 && res.status !== 401 && res.status !== 403) && onError) {
         onError({status: res.status, statusText: res.statusText, body: res.body})
     }
     return {
@@ -109,14 +109,14 @@ export const withCsrf = (headers: HeadersInit, isBrowser: boolean = browser): He
         return headers || {}
     }
     const h = new Headers(headers)
-    if(h.has(csrfHeader)) {
+    if (h.has(csrfHeader)) {
         return h
     }
 
     try {
         const cookies = document.cookie.split(';')
         let token = cookies.find((c) => c.includes(csrfCookie))
-        if(!token) {
+        if (!token) {
             return h
         }
         token = token.trim().slice(csrfCookie.length + 1)
@@ -127,7 +127,7 @@ export const withCsrf = (headers: HeadersInit, isBrowser: boolean = browser): He
 
     return h
 }
-export const fetchParams=(opts: RequestOpts): RequestInit => {
+export const fetchParams = (opts: RequestOpts): RequestInit => {
     const {
         method = 'GET',
         body,

@@ -8,6 +8,7 @@ type AppInfo {
 }
 
 type ExecuteWorkflowState {
+    id: String!
     value: String!
     validation: ValidateResponse
     applicationMutation1: MutateApplicationResponse
@@ -15,11 +16,12 @@ type ExecuteWorkflowState {
     compensation: CompensateResponse
     reply: ReplyResponse
     beginning: BeginResponse
-    #    finalizable: MarkFinalizable
+    finalizable: String
     finalization: FinalizeResponse
 }
 
 input ExecuteWorkflowRequest {
+    id: String!
     value: String!
     reply: ReplyRequest
 }
@@ -51,6 +53,8 @@ input ReplyRequest {
     activityName: String!
 }
 type ReplyResponse {
+    workflowId: String!
+    id: String!
     value: String!
 }
 
@@ -72,6 +76,7 @@ type FinalizeResponse {
 }
 
 input QueryRequest {
+    id: String!
     value: String!
 }
 type QueryResponse {

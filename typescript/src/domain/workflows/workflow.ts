@@ -34,7 +34,7 @@ export async function executeWorkflow(params: ExecuteWorkflowRequest): Promise<E
 
     setHandler(currentWorkflowStateQueryDef, (params: QueryQueryWorkflowArgs) => currentState)
     setHandler(markFinalizableSignalDef, (signalValue: MarkFinalizable) => {
-        currentState.finalizable = signalValue
+        currentState.finalizable = signalValue.value
     })
     try {
         currentState.validation = await validate(params)
@@ -54,7 +54,7 @@ export async function executeWorkflow(params: ExecuteWorkflowRequest): Promise<E
         currentState.reply = await reply[params.reply.activityName](params.reply)
     }
     currentState.beginning = await begin(params)
-    await condition(() => !!currentState.finalizable?.value, 1000 * 60)
+    await condition(() => !!currentState.finalizable, 1000 * 60)
     currentState.finalization = await finalize(params)
     return currentState
 }

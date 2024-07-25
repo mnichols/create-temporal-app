@@ -41,6 +41,7 @@ export type CompensateResponse = {
 };
 
 export type ExecuteWorkflowRequest = {
+  id: Scalars['String']['input'];
   reply?: InputMaybe<ReplyRequest>;
   value: Scalars['String']['input'];
 };
@@ -51,7 +52,9 @@ export type ExecuteWorkflowState = {
   applicationMutation2?: Maybe<MutateApplicationResponse>;
   beginning?: Maybe<BeginResponse>;
   compensation?: Maybe<CompensateResponse>;
+  finalizable?: Maybe<Scalars['String']['output']>;
   finalization?: Maybe<FinalizeResponse>;
+  id: Scalars['String']['output'];
   reply?: Maybe<ReplyResponse>;
   validation?: Maybe<ValidateResponse>;
   value: Scalars['String']['output'];
@@ -107,6 +110,7 @@ export type QueryQueryWorkflowArgs = {
 };
 
 export type QueryRequest = {
+  id: Scalars['String']['input'];
   value: Scalars['String']['input'];
 };
 
@@ -123,7 +127,9 @@ export type ReplyRequest = {
 
 export type ReplyResponse = {
   __typename?: 'ReplyResponse';
+  id: Scalars['String']['output'];
   value: Scalars['String']['output'];
+  workflowId: Scalars['String']['output'];
 };
 
 export type TemporalConnection = {
@@ -285,7 +291,9 @@ export type ExecuteWorkflowStateResolvers<ContextType = any, ParentType extends 
   applicationMutation2?: Resolver<Maybe<ResolversTypes['MutateApplicationResponse']>, ParentType, ContextType>;
   beginning?: Resolver<Maybe<ResolversTypes['BeginResponse']>, ParentType, ContextType>;
   compensation?: Resolver<Maybe<ResolversTypes['CompensateResponse']>, ParentType, ContextType>;
+  finalizable?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   finalization?: Resolver<Maybe<ResolversTypes['FinalizeResponse']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   reply?: Resolver<Maybe<ResolversTypes['ReplyResponse']>, ParentType, ContextType>;
   validation?: Resolver<Maybe<ResolversTypes['ValidateResponse']>, ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -318,7 +326,9 @@ export type QueryResponseResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type ReplyResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReplyResponse'] = ResolversParentTypes['ReplyResponse']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  workflowId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

@@ -47,9 +47,12 @@ The UI is all in on [roarr](https://github.com/gajus/roarr).
 
 ### Running The UI
 
-`npm run dev` starts an HTTPS dev server.
+You can `just run_web` and open `https://localhost:{.env/WEB_PORT}`.
 
-Set environment variables with `.env` in the `ui/web` root.
+Or you want to isolate this:
+
+1. Set environment variables with `.env` in the `ui/web` root.
+2. `npm run dev` starts an HTTPS dev server.
 
 ### Testing The UI
 

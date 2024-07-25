@@ -16,12 +16,13 @@ export const createResolvers = (client: Client): Resolvers => {
     const res: Resolvers = {
         Mutation: {
             executeWorkflow: async (_, args: Required<MutationExecuteWorkflowArgs>): Promise<ReplyResponse> => {
-                await client.workflow.start(executeWorkflow, {
-                    args: [{value: args.input.value}],
+                let run = await client.workflow.start(executeWorkflow, {
+                    args: [args.input],
                     taskQueue: cfg.Temporal.worker.taskQueue,
-                    workflowId: 'myfirstworkflow',
+                    workflowId: `wf_${args.input.id}`,
                 })
-                return {value: args.input.value}
+
+                return {value: args.input.value, id: args.input.id, workflowId: run.workflowId}
             },
             markFinalizable: async (_, args: Required<MutationMarkFinalizableArgs>): Promise<FinalizeResponse> => {
                 return {value: args.input.value}
@@ -34,7 +35,7 @@ export const createResolvers = (client: Client): Resolvers => {
                 return {
                     name: 'Temporal Application',
                     temporal: {
-                        namespace: 'foo'
+                        namespace: cfg.Temporal.connection.namespace,
                     }
                 }
             }

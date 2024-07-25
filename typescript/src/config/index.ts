@@ -1,11 +1,13 @@
 import dotenv from 'dotenv-extended'
 import fs from 'fs/promises'
+import {URL} from 'node:url'
 
 const envCfg = dotenv.load()
 
 export interface Config {
     Temporal: TemporalConfig
     IsProduction: boolean
+    BFF: BFFConfig
 }
 
 export interface TemporalMTLS {
@@ -56,6 +58,18 @@ export interface TemporalConfig {
     worker: TemporalWorker
 }
 
+export interface BFFConfig {
+    port: string
+}
+
+const createBffCfg = async (): Promise<BFFConfig> => {
+    const graphqlUrlEnv = process.env['PUBLIC_GRAPHQL_URL']
+    const graphqlUrl = new URL(graphqlUrlEnv || 'https://localhost:4000/graphql')
+    const bff: BFFConfig = {
+        port: graphqlUrl.port,
+    }
+    return bff;
+}
 const createTemporalCfg = async (): Promise<TemporalConfig> => {
     const mtls: TemporalMTLS = {
         certChainFile: process.env['TEMPORAL_CONNECTION_MTLS_CERT_CHAIN_FILE'],
@@ -112,12 +126,15 @@ const createTemporalCfg = async (): Promise<TemporalConfig> => {
     }
 }
 
+
 const temporalCfg = await createTemporalCfg()
+const bffCfg: BFFConfig = await createBffCfg()
 
 export const cfg: Config =
     {
         Temporal: temporalCfg,
-        IsProduction: process.env['NODE_ENV']?.toLowerCase() === 'production'
+        IsProduction: process.env['NODE_ENV']?.toLowerCase() === 'production',
+        BFF: bffCfg,
     }
 
 function numOrNot(key: string): number | undefined {

@@ -52,6 +52,6 @@ const options = {
     cert: fs.readFileSync('../localhost-client.pem'),
 };
 const httpsServer = https.createServer(options, app)
-httpsServer.listen(4000, () => {
-    console.log("Running a GraphQL API server at https://localhost:4000/graphql")
+httpsServer.listen(cfg.BFF.port, () => {
+    console.log(`Running a GraphQL API server at https://localhost:${cfg.BFF.port}/graphql`)
 })

@@ -1,0 +1,7 @@
+mutation ExecuteWorkflow($input: ExecuteWorkflowRequest!) {
+    executeWorkflow(input: $input) {
+        workflowId,
+        id,
+        value,
+    }
+}
