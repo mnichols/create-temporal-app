@@ -30,8 +30,11 @@ export const createResolvers = (client: Client): Resolvers => {
         },
         Query: {
             queryWorkflow: async (_, args: QueryQueryWorkflowArgs): Promise<ExecuteWorkflowState> => {
-                return {value: args.input?.value || 'no value'}
-            }, appInfo: async (_: {}): Promise<AppInfo> => {
+
+                let result = await client.workflow.getHandle(args.input?.id || 'notfound')
+                return result.query('currentState')
+            },
+            appInfo: async (_: {}): Promise<AppInfo> => {
                 return {
                     name: 'Temporal Application',
                     temporal: {

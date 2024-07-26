@@ -18,6 +18,7 @@ type ExecuteWorkflowState {
     beginning: BeginResponse
     finalizable: String
     finalization: FinalizeResponse
+    workflowId: String!
 }
 
 input ExecuteWorkflowRequest {
@@ -77,7 +78,7 @@ type FinalizeResponse {
 
 input QueryRequest {
     id: String!
-    value: String!
+    value: String
 }
 type QueryResponse {
     value: String!

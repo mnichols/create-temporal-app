@@ -58,6 +58,7 @@ export type ExecuteWorkflowState = {
   reply?: Maybe<ReplyResponse>;
   validation?: Maybe<ValidateResponse>;
   value: Scalars['String']['output'];
+  workflowId: Scalars['String']['output'];
 };
 
 export type FinalizeRequest = {
@@ -111,7 +112,7 @@ export type QueryQueryWorkflowArgs = {
 
 export type QueryRequest = {
   id: Scalars['String']['input'];
-  value: Scalars['String']['input'];
+  value?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type QueryResponse = {
@@ -297,6 +298,7 @@ export type ExecuteWorkflowStateResolvers<ContextType = any, ParentType extends 
   reply?: Resolver<Maybe<ResolversTypes['ReplyResponse']>, ParentType, ContextType>;
   validation?: Resolver<Maybe<ResolversTypes['ValidateResponse']>, ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  workflowId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

@@ -1,7 +1,7 @@
 import type * as activities from './activities.js'
 import {compensate} from './activities.js'
 import {ExecuteWorkflowRequest, ExecuteWorkflowState, MarkFinalizable, QueryQueryWorkflowArgs} from '../../gql/index.js'
-import {condition, defineQuery, defineSignal, proxyActivities, setHandler} from '@temporalio/workflow'
+import {condition, defineQuery, defineSignal, proxyActivities, setHandler, workflowInfo} from '@temporalio/workflow'
 
 
 const {
@@ -30,6 +30,8 @@ export async function executeWorkflow(params: ExecuteWorkflowRequest): Promise<E
         beginning: undefined,
         finalization: undefined,
         finalizable: undefined,
+        workflowId: workflowInfo().workflowId,
+        id: params.id,
     }
 
     setHandler(currentWorkflowStateQueryDef, (params: QueryQueryWorkflowArgs) => currentState)
