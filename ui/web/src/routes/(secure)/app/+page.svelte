@@ -1,34 +1,32 @@
 <script lang='ts'>
     import {getContextClient, mutationStore} from '@urql/svelte'
-    import cuid from '@paralleldrive/cuid2'
     import {humanId} from 'human-id'
     import {ExecuteWorkflowDocument} from '$gql'
+    import {go} from '$lib/nav/index.js'
 
-    const ids = cuid.init({length: 5});
     let defaultId = humanId({capitalize: false, separator: '-'})
-    const getFormJSON = (formData) => {
-        return Array.from(formData.keys()).reduce((result, key) => {
-            result[key] = formData.get(key);
-            return result;
-        }, {});
-    };
+    let workflow
 
-    function executeWorkflow(e: SubmitEvent) {
+    async function executeWorkflow(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement);
-        const inputs = getFormJSON(formData)
-        const client = getContextClient()
-        console.log('inputs', inputs)
         if (formData.get('workflow-value')) {
-            let out = mutationStore({
-                client,
+            workflow = mutationStore({
+                client: getContextClient(),
                 query: ExecuteWorkflowDocument,
                 variables: {
                     input: {
-                        id: inputs.id,
-                        value: inputs['workflow-value'],
+                        id: formData.get('id'),
+                        value: formData.get('workflow-value'),
                     },
                 }
+            }).subscribe(arg => {
+                console.log('received', arg)
+                if (arg?.data?.executeWorkflow) {
+                    console.log('redirecting', arg.data.executeWorkflow.workflowId)
+                    go(`/app/${arg.data.executeWorkflow.workflowId}`)
+                }
             })
+
         }
     }
 </script>
@@ -47,3 +45,7 @@
 
     <button type='submit' class='btn accent-green-200'>Start Workflow</button>
 </form>
+
+<!--{#if $workflow && $workflow.data}-->
+<!--    <a href='{$workflow.data.executeWorkflow.workflowId}' class='link'>{$workflow.data.executeWorkflow.workflowId}</a>-->
+<!--{/if}-->
