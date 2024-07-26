@@ -8,7 +8,6 @@ type AppInfo {
 }
 
 type ExecuteWorkflowState {
-    id: String!
     value: String!
     validation: ValidateResponse
     applicationMutation1: MutateApplicationResponse
@@ -22,7 +21,7 @@ type ExecuteWorkflowState {
 }
 
 input ExecuteWorkflowRequest {
-    id: String!
+    workflowId: String!
     value: String!
     reply: ReplyRequest
 }
@@ -77,10 +76,11 @@ type FinalizeResponse {
 }
 
 input QueryRequest {
-    id: String!
+    workflowId: String!
     value: String
 }
 type QueryResponse {
+    workflowId: String!
     value: String!
 }
 

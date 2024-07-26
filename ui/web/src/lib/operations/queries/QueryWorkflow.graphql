@@ -1,7 +1,6 @@
 query QueryWorkflow($input: QueryRequest) {
     queryWorkflow(input: $input) {
         workflowId,
-        id,
         value,
     }
 }
