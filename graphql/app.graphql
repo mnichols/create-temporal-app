@@ -7,7 +7,7 @@ type AppInfo {
     name: String!
 }
 
-type ExecuteWorkflowState {
+type CurrentWorkflowState {
     value: String!
     validation: ValidateResponse
     applicationMutation1: MutateApplicationResponse
@@ -90,5 +90,5 @@ type Mutation {
 }
 type Query {
     appInfo: AppInfo!
-    queryWorkflow(input: QueryRequest): ExecuteWorkflowState!
+    queryWorkflow(input: QueryRequest): CurrentWorkflowState!
 }

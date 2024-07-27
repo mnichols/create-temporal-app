@@ -17,7 +17,7 @@ const getConnectionOptions = (tcfg: TemporalConfig): ConnectionOptions => {
         address: tcfg.connection.target,
     }
 
-    if (tcfg.connection.mtls && tcfg.connection.mtls.key && tcfg.connection.mtls.certChain) {
+    if (tcfg.connection?.mtls && tcfg.connection?.mtls?.key && tcfg.connection?.mtls?.certChain) {
         connOpts.tls = {
             clientCertPair: {
                 crt: tcfg.connection.mtls.certChain,

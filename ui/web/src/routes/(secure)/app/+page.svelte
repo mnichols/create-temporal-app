@@ -6,16 +6,17 @@
 
     let defaultId = humanId({capitalize: false, separator: '-'})
     let workflow
+    let client = getContextClient()
 
     async function executeWorkflow(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement);
         if (formData.get('workflow-value')) {
             workflow = mutationStore({
-                client: getContextClient(),
+                client,
                 query: ExecuteWorkflowDocument,
                 variables: {
                     input: {
-                        id: formData.get('id'),
+                        workflowId: formData.get('id'),
                         value: formData.get('workflow-value'),
                     },
                 }

@@ -1,6 +1,6 @@
 import {
     AppInfo,
-    ExecuteWorkflowState,
+    CurrentWorkflowState,
     FinalizeResponse,
     MutationExecuteWorkflowArgs,
     MutationMarkFinalizableArgs,
@@ -19,19 +19,19 @@ export const createResolvers = (client: Client): Resolvers => {
                 let run = await client.workflow.start(executeWorkflow, {
                     args: [args.input],
                     taskQueue: cfg.Temporal.worker.taskQueue,
-                    workflowId: `wf_${args.input.id}`,
+                    workflowId: args.input.workflowId,
                 })
 
-                return {value: args.input.value, id: args.input.id, workflowId: run.workflowId}
+                return {value: args.input.value, id: args.input.workflowId, workflowId: run.workflowId}
             },
             markFinalizable: async (_, args: Required<MutationMarkFinalizableArgs>): Promise<FinalizeResponse> => {
                 return {value: args.input.value}
             }
         },
         Query: {
-            queryWorkflow: async (_, args: QueryQueryWorkflowArgs): Promise<ExecuteWorkflowState> => {
+            queryWorkflow: async (_, args: QueryQueryWorkflowArgs): Promise<CurrentWorkflowState> => {
 
-                let result = await client.workflow.getHandle(args.input?.id || 'notfound')
+                let result = client.workflow.getHandle(args.input?.workflowId || 'notfound')
                 return result.query('currentState')
             },
             appInfo: async (_: {}): Promise<AppInfo> => {

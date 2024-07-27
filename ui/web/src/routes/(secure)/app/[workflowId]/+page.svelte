@@ -1,23 +1,13 @@
 <script lang="ts">
     import {page} from '$app/stores'
-    import {getContextClient, queryStore} from '@urql/svelte'
-    import {QueryWorkflowDocument} from '$gql'
+    import CurrentWorkflowState from '$lib/components/workflow/CurrentWorkflowState.svelte'
+    import WorkflowLink from '$lib/components/workflow/WorkflowLink.svelte'
 
-    const state = queryStore({
-        client: getContextClient(),
-        query: QueryWorkflowDocument,
-        variables: {
-            input: {
-                id: $page.params.workflowId,
-                value: 'f'
-            }
-        }
-    })
+    let workflowId = $page.params.workflowId
 </script>
-
-<header>
-    <h1>Workflow {$page.params.workflowId}</h1>
-    {#if $state?.data?.queryWorkflow}
-        <p>{$state.data.queryWorkflow.value}</p>
-    {/if}
+<header class='flex'>
+    <h1 class='flex'>
+        <WorkflowLink workflowId={workflowId} label='Workflow {workflowId}'/>
+    </h1>
 </header>
+<CurrentWorkflowState workflowId={workflowId}/>
