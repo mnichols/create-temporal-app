@@ -16,7 +16,7 @@
     })
 
 </script>
-<div class='card  bg-base-100 w-96 shadow-xl'>
+<div class='card bg-base-100 w-96 shadow-xl'>
 
     {#if $state.fetching}
         <span class="loading loading-ball loading-xs"></span>
@@ -27,7 +27,7 @@
             <dt>Value</dt>
             <dd>{$state.data.queryWorkflow.value}</dd>
         </dl>
-        <ul class="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400">
+        <ul class="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400" data-theme='cupcake'>
             <li class="flex">
                 <StateItem isCompleted={!!$state.data.queryWorkflow.validation} label='validation'/>
             </li>
