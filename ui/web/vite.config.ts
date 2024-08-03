@@ -1,6 +1,9 @@
 import {sveltekit} from '@sveltejs/kit/vite';
 import {defineConfig} from 'vitest/config';
 import fs from 'fs'
+import dotenv from 'dotenv-extended'
+
+const envCfg = dotenv.load()
 
 /** @type {import('vite').UserConfig} */
 
@@ -17,6 +20,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
     const webhostUrl = new URL(webhost)
     if (webhostUrl.protocol.includes('https')) {
+        console.log('https cert file at ', process.env['WEB_CONNECTION_MTLS_CERT_CHAIN_FILE'])
         https = {
             key: fs.readFileSync(process.env['WEB_CONNECTION_MTLS_KEY_FILE'] || ''),
             cert: fs.readFileSync(process.env['WEB_CONNECTION_MTLS_CERT_CHAIN_FILE'] || '')

@@ -1,6 +1,11 @@
 import type * as activities from './activities.js'
 import {compensate} from './activities.js'
-import {CurrentWorkflowState, ExecuteWorkflowRequest, MarkFinalizable, QueryQueryWorkflowArgs} from '../../gql/index.js'
+import {
+    CurrentWorkflowState,
+    ExecuteWorkflowRequest,
+    MarkFinalizableRequest,
+    QueryQueryWorkflowArgs
+} from '../../gql/index.js'
 import {condition, defineQuery, defineSignal, proxyActivities, setHandler, workflowInfo} from '@temporalio/workflow'
 
 
@@ -18,7 +23,7 @@ const queryCurrentWorkflowState = 'currentState'
 const currentWorkflowStateQueryDef =
     defineQuery<CurrentWorkflowState, [QueryQueryWorkflowArgs]>(queryCurrentWorkflowState)
 
-const markFinalizableSignalDef = defineSignal<[MarkFinalizable]>(signalMarkFinalizable)
+const markFinalizableSignalDef = defineSignal<[MarkFinalizableRequest]>(signalMarkFinalizable)
 
 export async function executeWorkflow(params: ExecuteWorkflowRequest): Promise<CurrentWorkflowState> {
     const currentState: CurrentWorkflowState = {
@@ -34,7 +39,7 @@ export async function executeWorkflow(params: ExecuteWorkflowRequest): Promise<C
     }
 
     setHandler(currentWorkflowStateQueryDef, (params: QueryQueryWorkflowArgs) => currentState)
-    setHandler(markFinalizableSignalDef, (signalValue: MarkFinalizable) => {
+    setHandler(markFinalizableSignalDef, (signalValue: MarkFinalizableRequest) => {
         currentState.finalizable = signalValue.value
     })
     try {

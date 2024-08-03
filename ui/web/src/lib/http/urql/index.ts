@@ -1,8 +1,7 @@
-import {createClient as createURQLClient, fetchExchange,} from '@urql/svelte'
+import {Client, createClient as createURQLClient, debugExchange, fetchExchange,} from '@urql/svelte'
 import {PUBLIC_GRAPHQL_URL, PUBLIC_SUBSCRIPTIONS_URL} from "$env/static/public";
 // import { createAuthExchange } from "./auth";
 import {createCacheExchange} from './cache.js'
-import {Client, debugExchange,} from '@urql/core';
 import {devtoolsExchange} from '@urql/devtools';
 
 import {fetchParams} from "../api-fetch.js";

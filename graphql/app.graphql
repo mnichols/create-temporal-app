@@ -65,13 +65,15 @@ type BeginResponse {
     value: String!
 }
 
-input MarkFinalizable {
+input MarkFinalizableRequest {
     value: String!
 }
 input FinalizeRequest {
+    workflowId: String!
     value: String!
 }
 type FinalizeResponse {
+    workflowId: String!
     value: String!
 }
 
@@ -86,7 +88,7 @@ type QueryResponse {
 
 type Mutation {
     executeWorkflow(input: ExecuteWorkflowRequest!): ReplyResponse!
-    markFinalizable(input: MarkFinalizable!): FinalizeResponse!
+    markFinalizable(input: MarkFinalizableRequest!): FinalizeResponse!
 }
 type Query {
     appInfo: AppInfo!
