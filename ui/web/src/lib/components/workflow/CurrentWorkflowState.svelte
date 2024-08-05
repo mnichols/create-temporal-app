@@ -15,6 +15,7 @@
         }
     })
 
+
 </script>
 <div class='card bg-base-100 w-96 shadow-xl'>
 
@@ -27,7 +28,7 @@
             <dt>Value</dt>
             <dd>{$state.data.queryWorkflow.value}</dd>
         </dl>
-        <ul class="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400" data-theme='cupcake'>
+        <ul class="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400">
             <li class="flex">
                 <StateItem isCompleted={!!$state.data.queryWorkflow.validation} label='validation'/>
             </li>
@@ -54,14 +55,4 @@
             </li>
         </ul>
     {/if}
-    <!--    value: String!-->
-    <!--    validation: ValidateResponse-->
-    <!--    applicationMutation1: MutateApplicationResponse-->
-    <!--    applicationMutation2: MutateApplicationResponse-->
-    <!--    compensation: CompensateResponse-->
-    <!--    reply: ReplyResponse-->
-    <!--    beginning: BeginResponse-->
-    <!--    finalizable: String-->
-    <!--    finalization: FinalizeResponse-->
-    <!--    workflowId: String!-->
 </div>

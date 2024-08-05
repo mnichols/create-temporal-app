@@ -6,7 +6,7 @@ const config: CodegenConfig = {
     ignoreNoDocuments: true,
     generates: {
         './src/gql/index.ts': {
-            plugins: ['typescript', 'typescript-operations', 'typed-document-node'],
+            plugins: ['typescript', 'typescript-operations', 'typed-document-node', 'typescript-resolvers'],
             config: {
                 useTypeImports: true,
             }

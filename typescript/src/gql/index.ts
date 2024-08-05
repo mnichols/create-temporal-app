@@ -73,6 +73,7 @@ export type FinalizeResponse = {
 
 export type MarkFinalizableRequest = {
   value: Scalars['String']['input'];
+  workflowId: Scalars['String']['input'];
 };
 
 export type MutateApplicationRequest = {
@@ -135,6 +136,16 @@ export type ReplyResponse = {
   workflowId: Scalars['String']['output'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  workflowState: CurrentWorkflowState;
+};
+
+
+export type SubscriptionWorkflowStateArgs = {
+  input: WorkflowStateRequest;
+};
+
 export type TemporalConnection = {
   __typename?: 'TemporalConnection';
   namespace: Scalars['String']['output'];
@@ -148,6 +159,10 @@ export type ValidateRequest = {
 export type ValidateResponse = {
   __typename?: 'ValidateResponse';
   value: Scalars['String']['output'];
+};
+
+export type WorkflowStateRequest = {
+  workflowId: Scalars['String']['input'];
 };
 
 
@@ -241,9 +256,11 @@ export type ResolversTypes = {
   ReplyRequest: ReplyRequest;
   ReplyResponse: ResolverTypeWrapper<ReplyResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Subscription: ResolverTypeWrapper<{}>;
   TemporalConnection: ResolverTypeWrapper<TemporalConnection>;
   ValidateRequest: ValidateRequest;
   ValidateResponse: ResolverTypeWrapper<ValidateResponse>;
+  WorkflowStateRequest: WorkflowStateRequest;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -268,9 +285,11 @@ export type ResolversParentTypes = {
   ReplyRequest: ReplyRequest;
   ReplyResponse: ReplyResponse;
   String: Scalars['String']['output'];
+  Subscription: {};
   TemporalConnection: TemporalConnection;
   ValidateRequest: ValidateRequest;
   ValidateResponse: ValidateResponse;
+  WorkflowStateRequest: WorkflowStateRequest;
 };
 
 export type AppInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['AppInfo'] = ResolversParentTypes['AppInfo']> = {
@@ -337,6 +356,10 @@ export type ReplyResponseResolvers<ContextType = any, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+  workflowState?: SubscriptionResolver<ResolversTypes['CurrentWorkflowState'], "workflowState", ParentType, ContextType, RequireFields<SubscriptionWorkflowStateArgs, 'input'>>;
+};
+
 export type TemporalConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemporalConnection'] = ResolversParentTypes['TemporalConnection']> = {
   namespace?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   taskQueue?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -359,6 +382,7 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   QueryResponse?: QueryResponseResolvers<ContextType>;
   ReplyResponse?: ReplyResponseResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
   TemporalConnection?: TemporalConnectionResolvers<ContextType>;
   ValidateResponse?: ValidateResponseResolvers<ContextType>;
 };

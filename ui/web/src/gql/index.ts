@@ -77,6 +77,7 @@ export type FinalizeResponse = {
 
 export type MarkFinalizableRequest = {
   value: Scalars['String']['input'];
+  workflowId: Scalars['String']['input'];
 };
 
 export type MutateApplicationRequest = {
@@ -175,11 +176,17 @@ export type SubPingInput = {
 export type Subscription = {
   __typename?: 'Subscription';
   subPing?: Maybe<Pong>;
+  workflowState: CurrentWorkflowState;
 };
 
 
 export type SubscriptionSubPingArgs = {
   input?: InputMaybe<SubPingInput>;
+};
+
+
+export type SubscriptionWorkflowStateArgs = {
+  input: WorkflowStateRequest;
 };
 
 export type TemporalConnection = {
@@ -195,6 +202,10 @@ export type ValidateRequest = {
 export type ValidateResponse = {
   __typename?: 'ValidateResponse';
   value: Scalars['String']['output'];
+};
+
+export type WorkflowStateRequest = {
+  workflowId: Scalars['String']['input'];
 };
 
 export type ExecuteWorkflowMutationVariables = Exact<{

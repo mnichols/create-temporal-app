@@ -66,6 +66,7 @@ type BeginResponse {
 }
 
 input MarkFinalizableRequest {
+    workflowId: String!
     value: String!
 }
 input FinalizeRequest {
@@ -81,6 +82,10 @@ input QueryRequest {
     workflowId: String!
     value: String
 }
+
+input WorkflowStateRequest {
+    workflowId: String!
+}
 type QueryResponse {
     workflowId: String!
     value: String!
@@ -93,4 +98,7 @@ type Mutation {
 type Query {
     appInfo: AppInfo!
     queryWorkflow(input: QueryRequest): CurrentWorkflowState!
+}
+type Subscription {
+    workflowState(input: WorkflowStateRequest!): CurrentWorkflowState!
 }
