@@ -10,5 +10,5 @@
         <WorkflowLink workflowId={workflowId} label='Workflow {workflowId}'/>
     </h1>
 </header>
-<CurrentWorkflowState workflowId={workflowId}/>
+<CurrentWorkflowState workflowId={workflowId} shouldSubscribe=true/>
 

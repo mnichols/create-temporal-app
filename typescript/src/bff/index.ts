@@ -1,6 +1,5 @@
 import express from 'express'
 import {createHandler} from 'graphql-http/lib/use/express'
-import {printSchema} from 'graphql'
 import {GraphQLFileLoader} from '@graphql-tools/graphql-file-loader'
 import {loadSchemaSync} from '@graphql-tools/load'
 import {makeExecutableSchema} from '@graphql-tools/schema/makeExecutableSchema'
@@ -26,14 +25,14 @@ const schema = makeExecutableSchema({
 })
 
 
-console.log(printSchema(typeDefs));
+// console.log(printSchema(typeDefs));
 
 var app = express()
 app.use(cors())
 
 // Create and use the GraphQL handler.
 app.use(
-    "/graphql",
+    cfg.BFF.url.pathname,
     createHandler({
         schema,
         //rootValue: {...resolvers.Query, ...resolvers.Mutation},
@@ -46,12 +45,15 @@ app.get("/", (_req: any, res: any) => {
     res.end(ruruHTML({endpoint: "/graphql"}))
 })
 
+let options = {}
+if (cfg.BFF.mtls && cfg.BFF.mtls.certChainFile && cfg.BFF.mtls.keyFile) {
 // Start the server at port
-const options = {
-    key: fs.readFileSync('../localhost-client-key.pem'),
-    cert: fs.readFileSync('../localhost-client.pem'),
-};
+    options = {
+        key: fs.readFileSync(cfg.BFF.mtls?.keyFile),
+        cert: fs.readFileSync(cfg.BFF.mtls?.certChainFile),
+    };
+}
 const httpsServer = https.createServer(options, app)
-httpsServer.listen(cfg.BFF.port, () => {
-    console.log(`Running a GraphQL API server at https://localhost:${cfg.BFF.port}/graphql`)
+httpsServer.listen(cfg.BFF.url.port, () => {
+    console.log(`Running a GraphQL API server at https://localhost:${cfg.BFF.url.port}/graphql`)
 })

@@ -8,9 +8,10 @@ export interface Config {
     Temporal: TemporalConfig
     IsProduction: boolean
     BFF: BFFConfig
+    PubSub: PubSubConfig
 }
 
-export interface TemporalMTLS {
+export interface MTLSConfig {
     pkcs?: string
     key?: Buffer
     keyFile?: string
@@ -38,7 +39,6 @@ export interface TemporalWorkerRateLimits {
 }
 
 export interface TemporalWorker {
-
     taskQueue: string
     name?: string
     capacity?: TemporalWorkerCapacity
@@ -49,7 +49,7 @@ export interface TemporalWorker {
 export interface TemporalConnection {
     namespace: string
     target: string
-    mtls: TemporalMTLS | undefined
+    mtls: MTLSConfig | undefined
 }
 
 //     #TEMPORAL_WORKER_RATE_LIMITS_MAX_TASK_QUEUE_ACTIVITIES_PER_SECOND=
@@ -60,18 +60,58 @@ export interface TemporalConfig {
 
 export interface BFFConfig {
     port: string
+    mtls?: MTLSConfig
+    url: URL
+}
+
+export interface PubSubConfig {
+    port: string
+    mtls?: MTLSConfig
+    url: URL
 }
 
 const createBffCfg = async (): Promise<BFFConfig> => {
     const graphqlUrlEnv = process.env['PUBLIC_GRAPHQL_URL']
     const graphqlUrl = new URL(graphqlUrlEnv || 'https://localhost:4000/graphql')
-    const bff: BFFConfig = {
-        port: graphqlUrl.port,
+    const mtls: MTLSConfig = {
+        certChainFile: process.env['BFF_CONNECTION_MTLS_CERT_CHAIN_FILE'],
+        keyFile: process.env['BFF_CONNECTION_MTLS_KEY_FILE'],
+        //key: Buffer.from(process.env['BFF_CONNECTION_MTLS_KEY'] || ''),
+        //certChain: Buffer.from(process.env['BFF_CONNECTION_MTLS_CERT_CHAIN'] || ''),
+        pkcs: process.env['BFF_CONNECTION_MTLS_PKCS'],
+        insecureTrustManager: Boolean(process.env['BFF_CONNECTION_MTLS_INSECURE_TRUST_MANAGER'] || 'false'),
+        keyPassword: process.env['BFF_CONNECTION_MTLS_KEY_PASSWORD'],
+        serverName: process.env['BFF_CONNECTION_MTLS_SERVER_NAME'],
+        serverRootCACertificateFile: process.env['BFF_CONNECTION_MTLS_SERVER_ROOT_CA_CERTIFICATE_FILE']
     }
-    return bff;
+    return {
+        port: graphqlUrl.port,
+        mtls,
+        url: graphqlUrl,
+    };
+}
+const createPubSubCfg = async (): Promise<PubSubConfig> => {
+    const pubsubUrlEnv = process.env['PUBLIC_SUBSCRIPTIONS_URL']
+    const pubsubUrl = new URL(pubsubUrlEnv || 'http://iforgottopasstheenvironmentvariable.com')
+    const mtls: MTLSConfig = {
+        certChainFile: process.env['PUBSUB_CONNECTION_MTLS_CERT_CHAIN_FILE'],
+        keyFile: process.env['PUBSUB_CONNECTION_MTLS_KEY_FILE'],
+        //key: Buffer.from(process.env['PUBSUB_CONNECTION_MTLS_KEY'] || ''),
+        //certChain: Buffer.from(process.env['PUBSUB_CONNECTION_MTLS_CERT_CHAIN'] || ''),
+        pkcs: process.env['PUBSUB_CONNECTION_MTLS_PKCS'],
+        insecureTrustManager: Boolean(process.env['PUBSUB_CONNECTION_MTLS_INSECURE_TRUST_MANAGER'] || 'false'),
+        keyPassword: process.env['PUBSUB_CONNECTION_MTLS_KEY_PASSWORD'],
+        serverName: process.env['PUBSUB_CONNECTION_MTLS_SERVER_NAME'],
+        serverRootCACertificateFile: process.env['PUBSUB_CONNECTION_MTLS_SERVER_ROOT_CA_CERTIFICATE_FILE']
+    }
+    return {
+        port: pubsubUrl.port,
+        mtls,
+        url: pubsubUrl,
+    };
 }
 const createTemporalCfg = async (): Promise<TemporalConfig> => {
-    const mtls: TemporalMTLS = {
+    const mtls: MTLSConfig = {
         certChainFile: process.env['TEMPORAL_CONNECTION_MTLS_CERT_CHAIN_FILE'],
         keyFile: process.env['TEMPORAL_CONNECTION_MTLS_KEY_FILE'],
         //key: Buffer.from(process.env['TEMPORAL_CONNECTION_MTLS_KEY'] || ''),
@@ -129,12 +169,13 @@ const createTemporalCfg = async (): Promise<TemporalConfig> => {
 
 const temporalCfg = await createTemporalCfg()
 const bffCfg: BFFConfig = await createBffCfg()
-
+const pubSubCfg: PubSubConfig = await createPubSubCfg()
 export const cfg: Config =
     {
         Temporal: temporalCfg,
         IsProduction: process.env['NODE_ENV']?.toLowerCase() === 'production',
         BFF: bffCfg,
+        PubSub: pubSubCfg,
     }
 
 function numOrNot(key: string): number | undefined {

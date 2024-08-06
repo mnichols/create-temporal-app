@@ -1,10 +1,33 @@
 <script lang="ts">
-    import {getContextClient, queryStore} from '@urql/svelte'
-    import {QueryWorkflowDocument} from '../../../gql/index.js'
-    import StateItem from '$lib/components/workflow/StateItem.svelte'
+    import {getContextClient, queryStore, subscriptionStore} from '@urql/svelte'
+    import {
+        type CurrentWorkflowState,
+        QueryWorkflowDocument,
+        SubCurrentWorkflowStateDocument
+    } from '../../../gql/index.js'
+    import {Logger} from '$lib/log/index.js'
+    import WorkflowStateCard from '$lib/components/workflow/WorkflowStateCard.svelte'
+    import {onDestroy} from 'svelte'
 
-    export let workflowId: String
-    const state = queryStore({
+    let logger = Logger.child({component: 'CurrentWorkflowState'})
+
+    export let workflowId: string
+    export let shouldSubscribe: boolean
+
+    let currentData: CurrentWorkflowState
+    // actual data handler for each event from a subscription
+    const handleData = (previousData: any | undefined, data: any) => {
+        console.log('handleData', previousData, data)
+        if (previousData) {
+            logger.debug('previousData = %s', JSON.stringify(previousData))
+        }
+        if (!data) {
+            return
+        }
+        currentData = data.workflowState
+    }
+
+    const stateStore = queryStore({
         client: getContextClient(),
         query: QueryWorkflowDocument,
         variables: {
@@ -14,45 +37,51 @@
             }
         }
     })
+    if (stateStore && stateStore.subscribe) {
+        stateStore.subscribe(arg => {
+            if (arg?.data && arg?.data?.queryWorkflow) {
+                handleData(null, arg.data.queryWorkflow)
+            }
+        })
+
+    }
+
+    let messages = subscriptionStore({
+        client: getContextClient(),
+        query: SubCurrentWorkflowStateDocument,
+        variables: {input: {workflowId}}
+    }, handleData)
+    let unsub = messages.subscribe(arg => {
+        return () => {
+        }
+    })
+    onDestroy(unsub)
 
 
 </script>
-<div class='card bg-base-100 w-96 shadow-xl'>
+<div>
 
-    {#if $state.fetching}
-        <span class="loading loading-ball loading-xs"></span>
-    {:else if $state.error}
-        <p>{$state.error}</p>
-    {:else }
-        <dl>
-            <dt>Value</dt>
-            <dd>{$state.data.queryWorkflow.value}</dd>
-        </dl>
-        <ul class="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400">
-            <li class="flex">
-                <StateItem isCompleted={!!$state.data.queryWorkflow.validation} label='validation'/>
-            </li>
-            <li class="flex">
-                <StateItem isCompleted={!!$state.data.queryWorkflow.applicationMutation1} label='applicationMutation1'/>
-            </li>
-            <li class="flex">
-                <StateItem isCompleted={!!$state.data.queryWorkflow.applicationMutation2} label='applicationMutation2'/>
-            </li>
-            <li class="flex">
-                <StateItem isCompleted={!!$state.data.queryWorkflow.compensation} label='compensation'/>
-            </li>
-            <li class="flex">
-                <StateItem isCompleted={!!$state.data.queryWorkflow.reply} label='reply'/>
-            </li>
-            <li class="flex">
-                <StateItem isCompleted={!!$state.data.queryWorkflow.beginning} label='beginning'/>
-            </li>
-            <li class="flex">
-                <StateItem isCompleted={!!$state.data.queryWorkflow.finalizable} label='finalizable'/>
-            </li>
-            <li class="flex">
-                <StateItem isCompleted={!!$state.data.queryWorkflow.finalization} label='finalization'/>
-            </li>
-        </ul>
-    {/if}
+    <WorkflowStateCard workflowState={currentData}/>
+
+    <!--{#if $stateStore.fetching || !$stateStore.data}-->
+    <!--    <span class="loading loading-ball loading-xs"></span>-->
+    <!--{:else if $stateStore.error}-->
+    <!--    <p>{$stateStore.error}</p>-->
+    <!--{:else if $stateStore.data}-->
+    <!--    <WorkflowStateCard workflowState={currentData}/>-->
+    <!--{/if}-->
+
+    <!--{#if $messages}-->
+    <!--    <p>{currentData.workflowId}</p>-->
+    <!--{/if}-->
+    <!--{#if $messages.fetching}-->
+    <!--    <span class="loading loading-ball loading-xs"></span>-->
+    <!--{:else if $messages.error}-->
+    <!--    <p>ERROR</p>-->
+    <!--    <p>{$messages.error}</p>-->
+    <!--{:else if $messages.data}-->
+    <!--    <p>DATA</p>-->
+
+    <!--{/if}-->
+
 </div>

@@ -1,0 +1,14 @@
+subscription SubCurrentWorkflowState($input: WorkflowStateRequest!) {
+    workflowState(input: $input) {
+        workflowId,
+        value,
+        validation { value },
+        applicationMutation1 { value },
+        applicationMutation2 { value },
+        compensation { value },
+        reply { value},
+        beginning { value },
+        finalizable,
+        finalization { value }
+    }
+}
