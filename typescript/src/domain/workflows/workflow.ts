@@ -60,7 +60,7 @@ export async function executeWorkflow(params: ExecuteWorkflowRequest): Promise<C
         currentState.reply = await reply[params.reply.activityName](params.reply)
     }
     currentState.beginning = await begin(params)
-    await condition(() => !!currentState.finalizable, 1000 * 5)
+    await condition(() => !!currentState.finalizable, 1000 * 180)
     currentState.finalization = await finalize(params)
     return currentState
 }

@@ -1,8 +1,10 @@
 import {
     BeginRequest,
+    BeginResponse,
     CompensateRequest,
     CompensateResponse,
     FinalizeRequest,
+    FinalizeResponse,
     MutateApplicationRequest,
     MutateApplicationResponse,
     QueryRequest,
@@ -10,6 +12,7 @@ import {
     ValidateRequest,
     ValidateResponse
 } from '../../gql/index.js'
+import {Context} from '@temporalio/activity'
 
 export async function validate(params: ValidateRequest): Promise<ValidateResponse> {
     return {value: params.value}
@@ -24,13 +27,13 @@ export async function compensate(params: CompensateRequest): Promise<CompensateR
 }
 
 export async function query(params: QueryRequest): Promise<QueryResponse> {
+    return {value: params.value || 'no value specified'}
+}
+
+export async function begin(params: BeginRequest): Promise<BeginResponse> {
     return {value: params.value}
 }
 
-export async function begin(params: BeginRequest): Promise<BeginRequest> {
-    return {value: params.value}
-}
-
-export async function finalize(params: FinalizeRequest): Promise<FinalizeRequest> {
-    return {value: params.value}
+export async function finalize(params: FinalizeRequest): Promise<FinalizeResponse> {
+    return {value: params.value, workflowId: Context.current().info.workflowExecution?.workflowId}
 }

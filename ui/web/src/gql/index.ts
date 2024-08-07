@@ -155,7 +155,6 @@ export type QueryRequest = {
 export type QueryResponse = {
   __typename?: 'QueryResponse';
   value: Scalars['String']['output'];
-  workflowId: Scalars['String']['output'];
 };
 
 export type ReplyRequest = {
@@ -472,7 +471,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type QueryResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['QueryResponse'] = ResolversParentTypes['QueryResponse']> = {
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  workflowId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

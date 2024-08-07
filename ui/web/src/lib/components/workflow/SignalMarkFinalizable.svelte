@@ -1,26 +1,24 @@
 <script lang="ts">
-    import {mutationStore} from '@urql/svelte'
-    import {go} from '$lib/nav/index.js'
+    import {getContextClient, mutationStore} from '@urql/svelte'
+    import {MarkFinalizableDocument} from '$gql'
+
+    export let workflowState: CurrentWorkflowState
+    const client = getContextClient()
 
     async function markFinalizable(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement);
-        if (formData.get('workflow-value')) {
-            workflow = mutationStore({
+        if (formData.get('value')) {
+            let workflow = mutationStore({
                 client,
                 query: MarkFinalizableDocument,
                 variables: {
                     input: {
-                        workflowId: formData.get('id'),
-                        value: formData.get('workflow-value'),
+                        workflowId: workflowState.workflowId,
+                        value: formData.get('value'),
                     },
                 }
-            }).subscribe(arg => {
-                console.log('received', arg)
-                if (arg?.data?.executeWorkflow) {
-                    console.log('redirecting', arg.data.executeWorkflow.workflowId)
-                    go(`/app/${arg.data.executeWorkflow.workflowId}`)
-                }
             })
+        }
     }
 </script>
 

@@ -87,7 +87,6 @@ input WorkflowStateRequest {
     workflowId: String!
 }
 type QueryResponse {
-    workflowId: String!
     value: String!
 }
 
