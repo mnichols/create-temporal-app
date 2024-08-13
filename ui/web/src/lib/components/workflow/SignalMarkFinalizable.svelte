@@ -1,6 +1,6 @@
 <script lang="ts">
     import {getContextClient, mutationStore} from '@urql/svelte'
-    import {MarkFinalizableDocument} from '$gql'
+    import {type CurrentWorkflowState, MarkFinalizableDocument} from '$gql'
 
     export let workflowState: CurrentWorkflowState
     const client = getContextClient()

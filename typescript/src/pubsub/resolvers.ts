@@ -22,7 +22,7 @@ export const createResolvers = (client: Client): Resolvers => {
                 resolve(payload: CurrentWorkflowState): Promise<Promise<CurrentWorkflowState> | CurrentWorkflowState> | Promise<CurrentWorkflowState> | CurrentWorkflowState {
                     return payload
                 },
-                subscribe: subWithClient(client)
+                subscribe: workflowStateSubscription(client)
             }
         },
 
@@ -30,15 +30,14 @@ export const createResolvers = (client: Client): Resolvers => {
     return res
 }
 
-const subWithClient = (client: Client) => {
+// workflowStateSubscription polls for the connected client with a Query...naively.
+// ideally this will manage subscriptions that are PUT /sub/{requestId|workflowId} here soon
+const workflowStateSubscription = (client: Client) => {
     return async function* (parent: {}, args: Omit<SubscriptionWorkflowStateArgs, "input"> & {
         input: NonNullable<SubscriptionWorkflowStateArgs["input"]>
     }, context: any, info: GraphQLResolveInfo) {
-        console.log('subWithClient', args.input.workflowId)
-
         for await (const time of interval(1000)) {
             let wf = client.workflow.getHandle(args.input?.workflowId || 'notfound')
-            console.log('querying state')
             yield await wf.query('currentState')
         }
     }

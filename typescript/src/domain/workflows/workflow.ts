@@ -1,5 +1,4 @@
 import type * as activities from './activities.js'
-import {compensate} from './activities.js'
 import {
     CurrentWorkflowState,
     ExecuteWorkflowRequest,
@@ -14,6 +13,7 @@ const {
     mutateApplication,
     begin,
     finalize,
+    compensate,
 } = proxyActivities<typeof activities>({
     startToCloseTimeout: '10 seconds',
 })
