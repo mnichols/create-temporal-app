@@ -1,6 +1,6 @@
 <script lang="ts">
     import {getContextClient, subscriptionStore} from "@urql/svelte";
-    import {SubPingDocument} from '$gql'
+    import {SubPingDocument} from '../../../../../gql/index.js'
     import Status from '$lib/components/connection/Status.svelte'
 
     let vals: string[] = []

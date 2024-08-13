@@ -6,6 +6,7 @@
 
     const client = createClient()
     setContextClient(client)
+
     let settings = setContextSettings(createSettings(client))
     // redundant usage but shown here to get settings in nested components
     settings = getContextSettings()
