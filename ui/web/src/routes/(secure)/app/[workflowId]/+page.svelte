@@ -58,7 +58,11 @@
         <WorkflowLink workflowId={workflowId} label='Workflow {workflowId}'/>
     </h1>
 </header>
-<WorkflowStateCard workflowState={workflowState}/>
-{#if workflowState && !workflowState.finalization}
-    <SignalMarkFinalizable workflowState={workflowState}/>
-{/if}
+<div class='flex flex-col'>
+    <WorkflowStateCard workflowState={workflowState}/>
+</div>
+<div class='flex flex-col'>
+    {#if workflowState && !workflowState.finalization}
+        <SignalMarkFinalizable workflowState={workflowState}/>
+    {/if}
+</div>

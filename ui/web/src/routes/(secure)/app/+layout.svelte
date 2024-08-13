@@ -4,6 +4,7 @@
     import temporalLocal from '$lib/images/temporal-logo.png'
 
     import {getContextSettings} from '$lib/stores/settings.js';
+    import SettingsLink from '$lib/components/settings/SettingsLink.svelte'
 
     const settings = getContextSettings()
     settings.subscribe(s => {
@@ -31,6 +32,7 @@
         <slot/>
     </div>
     <div slot='footer'>
+        <SettingsLink/>
     </div>
 </HolyGrail>
 
