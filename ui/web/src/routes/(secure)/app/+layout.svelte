@@ -26,13 +26,20 @@
             </a>
         </div>
     </header>
-    <div slot='left-col'></div>
+    <div slot='left-col'>
+        <nav class='flex flex-col'>
+            <ul>
+                <li>
+                    <SettingsLink/>
+                </li>
+            </ul>
+        </nav>
+    </div>
 
     <div slot='main'>
         <slot/>
     </div>
     <div slot='footer'>
-        <SettingsLink/>
     </div>
 </HolyGrail>
 
