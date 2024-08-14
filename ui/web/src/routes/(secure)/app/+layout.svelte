@@ -28,16 +28,14 @@
         </div>
     </header>
     <div slot='left-col' class='flex flex-col w-full h-full'>
-        <nav class='flex flex-col bg-yellow-500 w-full h-full'>
-            <ul class='flex flex-col'>
-                <li class='flex flex-col'>
-                    <SettingsLink/>
-                </li>
-                <li class='flex bg-red-300 justify-between'>
-                    <DiagLink/>
-                </li>
-            </ul>
-        </nav>
+        <ul class='flex flex-col w-full h-full bg-green-300'>
+            <li class='bg-blue-300'>
+                <SettingsLink/>
+            </li>
+            <li class='bg-orange-300'>
+                <DiagLink/>
+            </li>
+        </ul>
     </div>
 
     <div slot='main'>
