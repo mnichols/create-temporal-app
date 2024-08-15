@@ -4,8 +4,9 @@
     import temporalLocal from '$lib/images/temporal-logo.png'
 
     import {getContextSettings} from '$lib/stores/settings.js';
-    import DiagLink from '$lib/components/diag/DiagLink.svelte'
-    import SettingsLink from '$lib/components/settings/SettingsLink.svelte'
+    import DiagLink from '$lib/components/nav/ToolsLink.svelte'
+    import SettingsLink from '$lib/components/nav/SettingsLink.svelte'
+    import HomeLink from '$lib/components/nav/HomeLink.svelte'
 
     const settings = getContextSettings()
     settings.subscribe(s => {
@@ -28,11 +29,14 @@
         </div>
     </header>
     <div slot='left-col' class='flex flex-col w-full h-full'>
-        <ul class='flex flex-col w-full h-full bg-green-300'>
-            <li class='bg-blue-300'>
+        <ul class='flex flex-col w-full h-full bg-neutral-500'>
+            <li>
+                <HomeLink/>
+            </li>
+            <li>
                 <SettingsLink/>
             </li>
-            <li class='bg-orange-300'>
+            <li>
                 <DiagLink/>
             </li>
         </ul>

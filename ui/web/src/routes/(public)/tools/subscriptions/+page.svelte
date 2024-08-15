@@ -6,7 +6,7 @@
     import Status from '$lib/components/connection/Status.svelte'
     import {onDestroy} from 'svelte'
 
-    let logger = Logger.child({component: 'diag'})
+    let logger = Logger.child({component: 'tools'})
     let vals: string[] = []
     $: showVals = vals
     let client = getContextClient()
