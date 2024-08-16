@@ -29,7 +29,7 @@
         </div>
     </header>
     <div slot='left-col' class='flex flex-col w-full h-full'>
-        <ul class='flex flex-col w-full h-full bg-neutral-500'>
+        <ul class='flex flex-col w-full h-full bg-neutral-200'>
             <li>
                 <HomeLink/>
             </li>
