@@ -18,6 +18,11 @@ export async function validate(params: ValidateRequest): Promise<ValidateRespons
     return {value: params.value}
 }
 
+export async function authorizePayment(params: ValidateRequest): Promise<ValidateResponse> {
+    return {value: params.value}
+}
+
+
 export async function mutateApplication(params: MutateApplicationRequest): Promise<MutateApplicationResponse> {
     return {value: params.value}
 }

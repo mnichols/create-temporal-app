@@ -9,14 +9,14 @@ import {
     Resolvers,
 } from '../gql/index.js'
 import {Client} from '@temporalio/client'
-import {startWorkflow} from '../domain/workflows/workflow.js'
+import {authorizePayment} from '../domain/workflows/authorizePayment.js'
 import {cfg} from '../config/index.js'
 
 export const createResolvers = (client: Client): Resolvers => {
     const res: Resolvers = {
         Mutation: {
             startWorkflow: async (_, args: Required<MutationStartWorkflowArgs>): Promise<ReplyResponse> => {
-                let run = await client.workflow.start(startWorkflow, {
+                let run = await client.workflow.start(authorizePayment, {
                     args: [args.input],
                     taskQueue: cfg.Temporal.worker.taskQueue,
                     workflowId: args.input.workflowId,

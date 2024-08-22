@@ -1,1 +1,2 @@
-export {startWorkflow} from './workflow.js'
+export {authorizePayment} from './authorizePayment.js'
+export {completePayment} from './completePayment.js'
