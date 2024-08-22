@@ -86,9 +86,9 @@
     /*    display: block;*/
     /*}*/
 
-    path {
-        fill: var(--background);
-    }
+    /*path {*/
+    /*    fill: var(--background);*/
+    /*}*/
 
     /*ul {*/
     /*    position: relative;*/

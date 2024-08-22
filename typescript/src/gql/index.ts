@@ -54,12 +54,6 @@ export type CurrentWorkflowState = {
   workflowId: Scalars['String']['output'];
 };
 
-export type ExecuteWorkflowRequest = {
-  reply?: InputMaybe<ReplyRequest>;
-  value: Scalars['String']['input'];
-  workflowId: Scalars['String']['input'];
-};
-
 export type FinalizeRequest = {
   value: Scalars['String']['input'];
   workflowId: Scalars['String']['input'];
@@ -87,13 +81,8 @@ export type MutateApplicationResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  executeWorkflow: ReplyResponse;
   markFinalizable: FinalizeResponse;
-};
-
-
-export type MutationExecuteWorkflowArgs = {
-  input: ExecuteWorkflowRequest;
+  startWorkflow: ReplyResponse;
 };
 
 
@@ -101,10 +90,16 @@ export type MutationMarkFinalizableArgs = {
   input: MarkFinalizableRequest;
 };
 
+
+export type MutationStartWorkflowArgs = {
+  input: StartWorkflowRequest;
+};
+
 export type Query = {
   __typename?: 'Query';
   appInfo: AppInfo;
   queryWorkflow: CurrentWorkflowState;
+  scenarioDefinitions: ScenarioDefinitions;
 };
 
 
@@ -133,6 +128,40 @@ export type ReplyResponse = {
   id: Scalars['String']['output'];
   value: Scalars['String']['output'];
   workflowId: Scalars['String']['output'];
+};
+
+export type Scenario = {
+  __typename?: 'Scenario';
+  active: Scalars['Boolean']['output'];
+  applicationFailure?: Maybe<Scalars['String']['output']>;
+  exception?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+export type ScenarioDefinition = {
+  __typename?: 'ScenarioDefinition';
+  applicationFailure?: Maybe<Scalars['String']['output']>;
+  exception?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type ScenarioDefinitions = {
+  __typename?: 'ScenarioDefinitions';
+  definitions: Array<ScenarioDefinition>;
+};
+
+export type Scenarios = {
+  __typename?: 'Scenarios';
+  scenarios: Array<Scenario>;
+};
+
+export type StartWorkflowRequest = {
+  reply?: InputMaybe<ReplyRequest>;
+  value: Scalars['String']['input'];
+  workflowId: Scalars['String']['input'];
 };
 
 export type Subscription = {
@@ -242,7 +271,6 @@ export type ResolversTypes = {
   CompensateRequest: CompensateRequest;
   CompensateResponse: ResolverTypeWrapper<CompensateResponse>;
   CurrentWorkflowState: ResolverTypeWrapper<CurrentWorkflowState>;
-  ExecuteWorkflowRequest: ExecuteWorkflowRequest;
   FinalizeRequest: FinalizeRequest;
   FinalizeResponse: ResolverTypeWrapper<FinalizeResponse>;
   MarkFinalizableRequest: MarkFinalizableRequest;
@@ -254,6 +282,11 @@ export type ResolversTypes = {
   QueryResponse: ResolverTypeWrapper<QueryResponse>;
   ReplyRequest: ReplyRequest;
   ReplyResponse: ResolverTypeWrapper<ReplyResponse>;
+  Scenario: ResolverTypeWrapper<Scenario>;
+  ScenarioDefinition: ResolverTypeWrapper<ScenarioDefinition>;
+  ScenarioDefinitions: ResolverTypeWrapper<ScenarioDefinitions>;
+  Scenarios: ResolverTypeWrapper<Scenarios>;
+  StartWorkflowRequest: StartWorkflowRequest;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Subscription: ResolverTypeWrapper<{}>;
   TemporalConnection: ResolverTypeWrapper<TemporalConnection>;
@@ -271,7 +304,6 @@ export type ResolversParentTypes = {
   CompensateRequest: CompensateRequest;
   CompensateResponse: CompensateResponse;
   CurrentWorkflowState: CurrentWorkflowState;
-  ExecuteWorkflowRequest: ExecuteWorkflowRequest;
   FinalizeRequest: FinalizeRequest;
   FinalizeResponse: FinalizeResponse;
   MarkFinalizableRequest: MarkFinalizableRequest;
@@ -283,6 +315,11 @@ export type ResolversParentTypes = {
   QueryResponse: QueryResponse;
   ReplyRequest: ReplyRequest;
   ReplyResponse: ReplyResponse;
+  Scenario: Scenario;
+  ScenarioDefinition: ScenarioDefinition;
+  ScenarioDefinitions: ScenarioDefinitions;
+  Scenarios: Scenarios;
+  StartWorkflowRequest: StartWorkflowRequest;
   String: Scalars['String']['output'];
   Subscription: {};
   TemporalConnection: TemporalConnection;
@@ -333,13 +370,14 @@ export type MutateApplicationResponseResolvers<ContextType = any, ParentType ext
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  executeWorkflow?: Resolver<ResolversTypes['ReplyResponse'], ParentType, ContextType, RequireFields<MutationExecuteWorkflowArgs, 'input'>>;
   markFinalizable?: Resolver<ResolversTypes['FinalizeResponse'], ParentType, ContextType, RequireFields<MutationMarkFinalizableArgs, 'input'>>;
+  startWorkflow?: Resolver<ResolversTypes['ReplyResponse'], ParentType, ContextType, RequireFields<MutationStartWorkflowArgs, 'input'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   appInfo?: Resolver<ResolversTypes['AppInfo'], ParentType, ContextType>;
   queryWorkflow?: Resolver<ResolversTypes['CurrentWorkflowState'], ParentType, ContextType, Partial<QueryQueryWorkflowArgs>>;
+  scenarioDefinitions?: Resolver<ResolversTypes['ScenarioDefinitions'], ParentType, ContextType>;
 };
 
 export type QueryResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['QueryResponse'] = ResolversParentTypes['QueryResponse']> = {
@@ -351,6 +389,34 @@ export type ReplyResponseResolvers<ContextType = any, ParentType extends Resolve
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   workflowId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ScenarioResolvers<ContextType = any, ParentType extends ResolversParentTypes['Scenario'] = ResolversParentTypes['Scenario']> = {
+  active?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  applicationFailure?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  exception?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  value?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ScenarioDefinitionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ScenarioDefinition'] = ResolversParentTypes['ScenarioDefinition']> = {
+  applicationFailure?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  exception?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ScenarioDefinitionsResolvers<ContextType = any, ParentType extends ResolversParentTypes['ScenarioDefinitions'] = ResolversParentTypes['ScenarioDefinitions']> = {
+  definitions?: Resolver<Array<ResolversTypes['ScenarioDefinition']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ScenariosResolvers<ContextType = any, ParentType extends ResolversParentTypes['Scenarios'] = ResolversParentTypes['Scenarios']> = {
+  scenarios?: Resolver<Array<ResolversTypes['Scenario']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -380,6 +446,10 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   QueryResponse?: QueryResponseResolvers<ContextType>;
   ReplyResponse?: ReplyResponseResolvers<ContextType>;
+  Scenario?: ScenarioResolvers<ContextType>;
+  ScenarioDefinition?: ScenarioDefinitionResolvers<ContextType>;
+  ScenarioDefinitions?: ScenarioDefinitionsResolvers<ContextType>;
+  Scenarios?: ScenariosResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   TemporalConnection?: TemporalConnectionResolvers<ContextType>;
   ValidateResponse?: ValidateResponseResolvers<ContextType>;

@@ -5,14 +5,14 @@
     export let workflowState: CurrentWorkflowState
 </script>
 
-<div class='card bg-base-100 w-96 shadow-xl'>
+<div class='card card-body w-96'>
 
     {#if workflowState}
         <dl>
             <dt>Value</dt>
             <dd>{workflowState.value}</dd>
         </dl>
-        <ul class="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400">
+        <ul class="max-w-md space-y-1 list-inside">
             <li class="flex">
                 <StateItem isCompleted={!!workflowState.validation} item={workflowState?.validation}
                            label='validation'/>

@@ -2,21 +2,21 @@ import {
     AppInfo,
     CurrentWorkflowState,
     FinalizeResponse,
-    MutationExecuteWorkflowArgs,
     MutationMarkFinalizableArgs,
+    MutationStartWorkflowArgs,
     QueryQueryWorkflowArgs,
     ReplyResponse,
     Resolvers,
 } from '../gql/index.js'
 import {Client} from '@temporalio/client'
-import {executeWorkflow} from '../domain/workflows/workflow.js'
+import {startWorkflow} from '../domain/workflows/workflow.js'
 import {cfg} from '../config/index.js'
 
 export const createResolvers = (client: Client): Resolvers => {
     const res: Resolvers = {
         Mutation: {
-            executeWorkflow: async (_, args: Required<MutationExecuteWorkflowArgs>): Promise<ReplyResponse> => {
-                let run = await client.workflow.start(executeWorkflow, {
+            startWorkflow: async (_, args: Required<MutationStartWorkflowArgs>): Promise<ReplyResponse> => {
+                let run = await client.workflow.start(startWorkflow, {
                     args: [args.input],
                     taskQueue: cfg.Temporal.worker.taskQueue,
                     workflowId: args.input.workflowId,

@@ -20,7 +20,28 @@ type CurrentWorkflowState {
     workflowId: String!
 }
 
-input ExecuteWorkflowRequest {
+type Scenarios {
+    scenarios: [Scenario!]!
+}
+type Scenario {
+    id: String!
+    title: String!
+    active: Boolean!
+    applicationFailure: String
+    exception: String
+    value: String
+}
+type ScenarioDefinitions {
+    definitions: [ScenarioDefinition!]!
+}
+type ScenarioDefinition {
+    id: String!
+    title: String!
+    applicationFailure: String
+    exception: String
+}
+
+input StartWorkflowRequest {
     workflowId: String!
     value: String!
     reply: ReplyRequest
@@ -91,12 +112,13 @@ type QueryResponse {
 }
 
 type Mutation {
-    executeWorkflow(input: ExecuteWorkflowRequest!): ReplyResponse!
+    startWorkflow(input: StartWorkflowRequest!): ReplyResponse!
     markFinalizable(input: MarkFinalizableRequest!): FinalizeResponse!
 }
 type Query {
     appInfo: AppInfo!
     queryWorkflow(input: QueryRequest): CurrentWorkflowState!
+    scenarioDefinitions: ScenarioDefinitions!
 }
 type Subscription {
     workflowState(input: WorkflowStateRequest!): CurrentWorkflowState!

@@ -6,14 +6,15 @@
     import {type CurrentWorkflowState, QueryWorkflowDocument, SubCurrentWorkflowStateDocument} from '$gql'
     import {onDestroy} from 'svelte'
     import WorkflowStateCard from '$lib/components/workflow/WorkflowStateCard.svelte'
+    import {Logger} from '$lib/log/index.js'
 
     let workflowId = $page.params.workflowId
 
     let workflowState: CurrentWorkflowState
-
+    let logger = Logger.child({component: 'app[workflowId]'})
     // actual data handler for each event from a subscription
     const handleData = (previousData: any | undefined, data: any) => {
-        console.log('handleData', previousData, data)
+        logger.debug('handleData', previousData, data)
         if (previousData) {
             logger.debug('previousData = %s', JSON.stringify(previousData))
         }
