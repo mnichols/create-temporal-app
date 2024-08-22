@@ -8,7 +8,14 @@
     import {Logger} from '$lib/log/index.js'
     import SignalMarkFinalizable from '$lib/components/workflow/SignalMarkFinalizable.svelte'
 
+    let client = getContextClient()
     let workflowId = $page.params.workflowId
+
+
+    let unsubscribe = () => {
+    }
+    let componentDestroy = () => {
+    }
 
     let workflowState: CurrentPaymentState
     let logger = Logger.child({component: 'app[workflowId]'})
@@ -22,10 +29,11 @@
             return
         }
         workflowState = data.workflowState
+        workflowId = workflowState.paymentCompletionId
     }
 
     const stateStore = queryStore({
-        client: getContextClient(),
+        client,
         query: QueryWorkflowDocument,
         variables: {
             input: {
@@ -34,25 +42,31 @@
             }
         }
     })
+    const subscribe = (workflowId: string) => {
+        unsubscribe()
+        let messages = subscriptionStore({
+            client,
+            query: SubCurrentPaymentStateDocument,
+            variables: {input: {workflowId}}
+        }, handleData)
+        unsubscribe = messages.subscribe(arg => {
+            return () => {
+            }
+        })
+    }
     if (stateStore && stateStore.subscribe) {
         stateStore.subscribe(arg => {
             if (arg?.data && arg?.data?.queryWorkflow) {
-                handleData(null, arg.data.queryWorkflow)
+                workflowState = arg?.data?.queryWorkflow
+                if (!workflowState.finalization && workflowState.paymentCompletionId) {
+                    subscribe(workflowState.paymentCompletionId)
+                }
             }
         })
 
     }
 
-    let messages = subscriptionStore({
-        client: getContextClient(),
-        query: SubCurrentPaymentStateDocument,
-        variables: {input: {workflowId}}
-    }, handleData)
-    let unsub = messages.subscribe(arg => {
-        return () => {
-        }
-    })
-    onDestroy(unsub)
+    onDestroy(unsubscribe)
 </script>
 <header class='flex'>
     <h1 class='flex'>
@@ -62,8 +76,8 @@
 <div class='flex flex-col'>
     <WorkflowStateCard workflowState={workflowState}/>
 </div>
-{#if workflowState && !workflowState.finalization}
-    <div class='flex flex-col border-8 border-accent'>
+{#if workflowState && !workflowState.finalization && workflowState.authorization?.approved}
+    <div class='flex flex-col border-8 border-slate-800 rounded-2xl w-96'>
         <SignalMarkFinalizable workflowState={workflowState}/>
     </div>
 {/if}

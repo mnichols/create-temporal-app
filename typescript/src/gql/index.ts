@@ -74,7 +74,7 @@ export type CurrentPaymentState = {
   capture?: Maybe<CaptureResponse>;
   compensation?: Maybe<CompensateResponse>;
   finalizable?: Maybe<Scalars['String']['output']>;
-  finalization?: Maybe<CaptureResponse>;
+  finalization?: Maybe<FinalizeResponse>;
   paymentCompletionId: Scalars['String']['output'];
   paymentId: Scalars['String']['output'];
   value: Scalars['String']['output'];
@@ -385,7 +385,7 @@ export type CurrentPaymentStateResolvers<ContextType = any, ParentType extends R
   capture?: Resolver<Maybe<ResolversTypes['CaptureResponse']>, ParentType, ContextType>;
   compensation?: Resolver<Maybe<ResolversTypes['CompensateResponse']>, ParentType, ContextType>;
   finalizable?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  finalization?: Resolver<Maybe<ResolversTypes['CaptureResponse']>, ParentType, ContextType>;
+  finalization?: Resolver<Maybe<ResolversTypes['FinalizeResponse']>, ParentType, ContextType>;
   paymentCompletionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   paymentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

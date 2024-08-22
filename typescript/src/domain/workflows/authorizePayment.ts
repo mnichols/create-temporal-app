@@ -58,7 +58,6 @@ export async function authorizePayment(params: AuthorizePaymentRequest): Promise
         throw err
     }
 
-
     await startChild(completePayment, {
         workflowId: currentState.paymentCompletionId,
         args: [currentState],

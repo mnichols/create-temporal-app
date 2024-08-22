@@ -17,7 +17,7 @@ type CurrentPaymentState {
     compensation: CompensateResponse
     beginning: BeginResponse
     finalizable: String
-    finalization: CaptureResponse
+    finalization: FinalizeResponse
     paymentId: String!
     paymentCompletionId: String!
 }

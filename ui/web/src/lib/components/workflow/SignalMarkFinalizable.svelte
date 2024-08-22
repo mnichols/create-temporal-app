@@ -21,13 +21,13 @@
         }
     }
 </script>
-<div>Completion Workflow ID: <span>{workflowState.paymentCompletionId}</span></div>
 <form on:submit|preventDefault={markFinalizable} class='flex flex-col'>
+    <h3 class='prose prose-slate prose-2xl'>Capture Funds</h3>
     <label for='value' class='label'>
-        <span class='label-text'>Value</span>
+        <span class='label-text prose prose-lg'>Value</span>
         <input type='text' name='value' placeholder='Enter value here' required class='input w-full max-w-xs'
                value={workflowState.value}/>
     </label>
 
-    <button type='submit' class='btn accent-green-200'>Capture Funds</button>
+    <button type='submit' class='btn btn-primary'>Submit</button>
 </form>

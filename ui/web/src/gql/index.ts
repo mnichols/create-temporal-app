@@ -76,7 +76,7 @@ export type CurrentPaymentState = {
   capture?: Maybe<CaptureResponse>;
   compensation?: Maybe<CompensateResponse>;
   finalizable?: Maybe<Scalars['String']['output']>;
-  finalization?: Maybe<CaptureResponse>;
+  finalization?: Maybe<FinalizeResponse>;
   paymentCompletionId: Scalars['String']['output'];
   paymentId: Scalars['String']['output'];
   value: Scalars['String']['output'];
@@ -291,7 +291,7 @@ export type QueryWorkflowQueryVariables = Exact<{
 }>;
 
 
-export type QueryWorkflowQuery = { __typename?: 'Query', queryWorkflow: { __typename?: 'CurrentPaymentState', accountId: string, paymentId: string, value: string, authorizationToken?: string | null, paymentCompletionId: string, authorization?: { __typename?: 'PaymentAuthorizationResponse', token: string, value: string, approved: boolean } | null, capture?: { __typename?: 'CaptureResponse', value: string } | null, finalization?: { __typename?: 'CaptureResponse', value: string } | null } };
+export type QueryWorkflowQuery = { __typename?: 'Query', queryWorkflow: { __typename?: 'CurrentPaymentState', accountId: string, paymentId: string, value: string, authorizationToken?: string | null, paymentCompletionId: string, authorization?: { __typename?: 'PaymentAuthorizationResponse', token: string, value: string, approved: boolean } | null, capture?: { __typename?: 'CaptureResponse', value: string } | null, finalization?: { __typename?: 'FinalizeResponse', value: string } | null } };
 
 export type ScenarioDefinitionsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -303,7 +303,7 @@ export type SubCurrentPaymentStateSubscriptionVariables = Exact<{
 }>;
 
 
-export type SubCurrentPaymentStateSubscription = { __typename?: 'Subscription', workflowState: { __typename?: 'CurrentPaymentState', accountId: string, paymentId: string, value: string, paymentCompletionId: string, authorization?: { __typename?: 'PaymentAuthorizationResponse', token: string, approved: boolean } | null, capture?: { __typename?: 'CaptureResponse', value: string } | null, finalization?: { __typename?: 'CaptureResponse', value: string } | null } };
+export type SubCurrentPaymentStateSubscription = { __typename?: 'Subscription', workflowState: { __typename?: 'CurrentPaymentState', accountId: string, paymentId: string, value: string, paymentCompletionId: string, authorization?: { __typename?: 'PaymentAuthorizationResponse', token: string, approved: boolean } | null, capture?: { __typename?: 'CaptureResponse', value: string } | null, finalization?: { __typename?: 'FinalizeResponse', value: string } | null } };
 
 export type SubPingSubscriptionVariables = Exact<{
   input?: InputMaybe<SubPingInput>;
@@ -509,7 +509,7 @@ export type CurrentPaymentStateResolvers<ContextType = any, ParentType extends R
   capture?: Resolver<Maybe<ResolversTypes['CaptureResponse']>, ParentType, ContextType>;
   compensation?: Resolver<Maybe<ResolversTypes['CompensateResponse']>, ParentType, ContextType>;
   finalizable?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  finalization?: Resolver<Maybe<ResolversTypes['CaptureResponse']>, ParentType, ContextType>;
+  finalization?: Resolver<Maybe<ResolversTypes['FinalizeResponse']>, ParentType, ContextType>;
   paymentCompletionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   paymentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

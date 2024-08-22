@@ -6,13 +6,13 @@ import {
     defineQuery,
     defineSignal,
     proxyActivities,
-    setHandler
+    setHandler,
+    workflowInfo
 } from '@temporalio/workflow'
 
 
 const {
     capture,
-    mutateApplication,
     begin,
     finalize,
     compensate,
@@ -36,7 +36,10 @@ export async function completePayment(params: CurrentPaymentState): Promise<Curr
         captureRequested = signalValue
     })
     if (!params.authorization?.approved) {
-        throw ApplicationFailure.create({message: "Only approved payments may be completed."})
+        // here we could journal declined payments and track for fraud detection, audits, etc
+        throw ApplicationFailure.create({
+            message: "Only approved payments may be completed."
+        })
     }
 
     const conditionMet = await condition(() => !!captureRequested, 1000 * 180)
@@ -58,6 +61,9 @@ export async function completePayment(params: CurrentPaymentState): Promise<Curr
 
     currentState.beginning = await begin(params)
 
-    currentState.finalization = await finalize(params)
+    currentState.finalization = await finalize({
+        workflowId: workflowInfo().workflowId,
+        value: currentState.capture?.value || 'unknown'
+    })
     return currentState
 }

@@ -30,18 +30,21 @@ export async function authorizePayment(params: AuthorizePaymentRequest): Promise
 
 export async function getAuthorization(token: string): Promise<PaymentAuthorizationResponse> {
     const parts = token.split('__')
+
+    // Simulate a service outage that will never recover
     if (token.includes('!issuer')) {
         throw ApplicationFailure.create({
             nonRetryable: true,
             type: ERR_ISSUER_SERVICE_FAILURE, message: 'Simulated issuer API 5xx response timeout'
         })
     }
+    // Simulate a bug that can be fixed and redeployed
     if (token.includes('!bug')) {
         throw Error('Simulated bug in activity code')
     }
     return {
         token,
-        approved: !token.includes('declined'),
+        approved: !token.includes('!declined'),
         value: parts[2]
     }
 }
