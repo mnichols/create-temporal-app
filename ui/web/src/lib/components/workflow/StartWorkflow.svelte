@@ -4,14 +4,18 @@
     import {AuthorizePaymentDocument} from '$gql'
     import {go} from '$lib/nav/index.js'
     import {Logger} from '$lib/log/index.js'
+    import WorkflowLink from '$lib/components/workflow/WorkflowLink.svelte'
 
     let logger = Logger.child({component: 'startWorkflow'})
     let defaultId = humanId({capitalize: false, separator: '-'})
     let client = getContextClient()
+    let startedWorkflowId: string | undefined | null
+    let error: string | undefined | null
 
     async function startWorkflow(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement);
-        if (formData.get('workflow-value')) {
+        startedWorkflowId = formData.get('id')
+        if (startedWorkflowId && formData.get('workflow-value')) {
             mutationStore({
                 client,
                 query: AuthorizePaymentDocument,
@@ -23,10 +27,11 @@
                     },
                 }
             }).subscribe(arg => {
-                console.log('arg', arg)
                 if (arg?.data?.authorizePayment) {
                     console.log('redirecting', arg?.data?.authorizePayment)
                     go(`/app/${arg.data.authorizePayment.paymentId}`)
+                } else if (arg?.error?.graphQLErrors) {
+                    error = arg.error.graphQLErrors.reduce((msg, e) => msg + '\n' + e, 'Error:')
                 }
             })
 
@@ -50,9 +55,14 @@
         <span class='label-text'>Amount</span>
         <input type='text' name='workflow-value' placeholder='Enter value here' required class='input w-full max-w-xs'/>
     </label>
-    <button type='submit' class='btn accent-green-200'>Make Payment</button>
+    <button type='submit' class='btn accent-green-200' disabled={!!startedWorkflowId}>Make Payment</button>
+    {#if startedWorkflowId}
+        <div>
+            <WorkflowLink workflowId={startedWorkflowId} label='Workflow {startedWorkflowId}'/>
+        </div>
+    {/if}
 </form>
+{#if error}
+    <div class='text-error'>{error}</div>
 
-<!--{#if $workflow && $workflow.data}-->
-<!--    <a href='{$workflow.data.executeWorkflow.workflowId}' class='link'>{$workflow.data.executeWorkflow.workflowId}</a>-->
-<!--{/if}-->
+{/if}

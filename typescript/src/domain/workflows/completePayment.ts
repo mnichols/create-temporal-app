@@ -58,9 +58,6 @@ export async function completePayment(params: CurrentPaymentState): Promise<Curr
         }
     }
 
-
-    currentState.beginning = await begin(params)
-
     currentState.finalization = await finalize({
         workflowId: workflowInfo().workflowId,
         value: currentState.capture?.value || 'unknown'
