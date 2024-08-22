@@ -1,7 +1,6 @@
 <script lang="ts">
     import {page} from '$app/stores'
     import WorkflowLink from '$lib/components/workflow/WorkflowLink.svelte'
-    import SignalMarkFinalizable from '$lib/components/workflow/SignalMarkFinalizable.svelte'
     import {getContextClient, queryStore, subscriptionStore} from '@urql/svelte'
     import {type CurrentPaymentState, QueryWorkflowDocument, SubCurrentPaymentStateDocument} from '$gql'
     import {onDestroy} from 'svelte'
@@ -14,7 +13,7 @@
     let logger = Logger.child({component: 'app[workflowId]'})
     // actual data handler for each event from a subscription
     const handleData = (previousData: any | undefined, data: any) => {
-        logger.debug('handleData', previousData, data)
+        console.log('handleData', data)
         if (previousData) {
             logger.debug('previousData = %s', JSON.stringify(previousData))
         }
@@ -22,6 +21,7 @@
             return
         }
         workflowState = data.workflowState
+        console.log('setting workflowState', data.workflowState)
     }
 
     const stateStore = queryStore({
@@ -47,7 +47,11 @@
         client: getContextClient(),
         query: SubCurrentPaymentStateDocument,
         variables: {input: {workflowId}}
-    }, handleData)
+    }, (arg1, arg2) => {
+        console.log('arg1', arg1)
+        console.log('arg2', arg2)
+        handleData(arg1, arg2)
+    })
     let unsub = messages.subscribe(arg => {
         return () => {
         }
@@ -62,8 +66,4 @@
 <div class='flex flex-col'>
     <WorkflowStateCard workflowState={workflowState}/>
 </div>
-<div class='flex flex-col'>
-    {#if workflowState && !workflowState.finalization}
-        <SignalMarkFinalizable workflowState={workflowState}/>
-    {/if}
-</div>
+

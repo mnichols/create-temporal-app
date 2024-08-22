@@ -28,7 +28,7 @@ export async function getAuthorization(token: string): Promise<PaymentAuthorizat
     const parts = token.split('__')
     return {
         token,
-        approved: true,
+        approved: !token.includes('declined'),
         value: parts[0]
     }
 }
