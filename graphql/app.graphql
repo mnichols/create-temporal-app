@@ -8,6 +8,7 @@ type AppInfo {
 }
 
 type CurrentPaymentState {
+    accountId: String!
     value: String!
     authorizationToken: String
     authorization: PaymentAuthorizationResponse
@@ -19,6 +20,7 @@ type CurrentPaymentState {
     finalizable: String
     finalization: FinalizeResponse
     paymentId: String!
+    paymentCompletionId: String!
 }
 
 type Scenarios {

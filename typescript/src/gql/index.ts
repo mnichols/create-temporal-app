@@ -56,6 +56,7 @@ export type CompensateResponse = {
 
 export type CurrentPaymentState = {
   __typename?: 'CurrentPaymentState';
+  accountId: Scalars['String']['output'];
   applicationMutation1?: Maybe<MutateApplicationResponse>;
   applicationMutation2?: Maybe<MutateApplicationResponse>;
   authorization?: Maybe<PaymentAuthorizationResponse>;
@@ -64,6 +65,7 @@ export type CurrentPaymentState = {
   compensation?: Maybe<CompensateResponse>;
   finalizable?: Maybe<Scalars['String']['output']>;
   finalization?: Maybe<FinalizeResponse>;
+  paymentCompletionId: Scalars['String']['output'];
   paymentId: Scalars['String']['output'];
   reply?: Maybe<PaymentAuthorizationResponse>;
   value: Scalars['String']['output'];
@@ -364,6 +366,7 @@ export type CompensateResponseResolvers<ContextType = any, ParentType extends Re
 };
 
 export type CurrentPaymentStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['CurrentPaymentState'] = ResolversParentTypes['CurrentPaymentState']> = {
+  accountId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   applicationMutation1?: Resolver<Maybe<ResolversTypes['MutateApplicationResponse']>, ParentType, ContextType>;
   applicationMutation2?: Resolver<Maybe<ResolversTypes['MutateApplicationResponse']>, ParentType, ContextType>;
   authorization?: Resolver<Maybe<ResolversTypes['PaymentAuthorizationResponse']>, ParentType, ContextType>;
@@ -372,6 +375,7 @@ export type CurrentPaymentStateResolvers<ContextType = any, ParentType extends R
   compensation?: Resolver<Maybe<ResolversTypes['CompensateResponse']>, ParentType, ContextType>;
   finalizable?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   finalization?: Resolver<Maybe<ResolversTypes['FinalizeResponse']>, ParentType, ContextType>;
+  paymentCompletionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   paymentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   reply?: Resolver<Maybe<ResolversTypes['PaymentAuthorizationResponse']>, ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

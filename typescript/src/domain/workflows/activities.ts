@@ -15,21 +15,32 @@ import {
     ValidateResponse
 } from '../../gql/index.js'
 import {Context} from '@temporalio/activity'
+import {ApplicationFailure} from '@temporalio/workflow'
+import {ERR_ISSUER_SERVICE_FAILURE} from './errors.js'
 
 export async function validate(params: ValidateRequest): Promise<ValidateResponse> {
     return {value: params.value}
 }
 
 export async function authorizePayment(params: AuthorizePaymentRequest): Promise<string> {
-    return `${params.value}__${params.paymentId}`
+    return `${params.accountId}__${params.paymentId}__${params.value}`
 }
 
 export async function getAuthorization(token: string): Promise<PaymentAuthorizationResponse> {
     const parts = token.split('__')
+    if (token.includes('!issuer')) {
+        throw ApplicationFailure.create({
+            nonRetryable: true,
+            type: ERR_ISSUER_SERVICE_FAILURE, message: 'Simulated issuer API 5xx response timeout'
+        })
+    }
+    if (token.includes('!bug')) {
+        throw Error('Simulated bug in activity code')
+    }
     return {
         token,
         approved: !token.includes('declined'),
-        value: parts[0]
+        value: parts[2]
     }
 }
 
@@ -38,6 +49,7 @@ export async function mutateApplication(params: MutateApplicationRequest): Promi
 }
 
 export async function compensate(params: CompensateRequest): Promise<CompensateResponse> {
+    console.log('compensation performed for ', params.value)
     return {value: params.value}
 }
 

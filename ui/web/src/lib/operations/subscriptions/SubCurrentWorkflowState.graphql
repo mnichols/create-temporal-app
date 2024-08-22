@@ -1,5 +1,6 @@
 subscription SubCurrentPaymentState($input: WorkflowStateRequest!) {
     workflowState(input: $input) {
+        accountId,
         paymentId,
         value,
         authorization { token, approved },

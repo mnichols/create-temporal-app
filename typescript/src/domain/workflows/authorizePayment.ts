@@ -7,6 +7,7 @@ import {
     QueryQueryWorkflowArgs
 } from '../../gql/index.js'
 import {defineQuery, defineSignal, proxyActivities, setHandler, workflowInfo} from '@temporalio/workflow'
+import {ERR_ISSUER_SERVICE_FAILURE} from './errors.js'
 
 
 const {
@@ -15,6 +16,9 @@ const {
     compensate,
 } = proxyActivities<typeof activities>({
     startToCloseTimeout: '10 seconds',
+    retry: {
+        nonRetryableErrorTypes: [ERR_ISSUER_SERVICE_FAILURE]
+    }
 })
 
 const signalMarkFinalizable = 'markFinalizable'
@@ -26,6 +30,7 @@ const markFinalizableSignalDef = defineSignal<[MarkFinalizableRequest]>(signalMa
 
 export async function authorizePayment(params: AuthorizePaymentRequest): Promise<AuthorizePaymentResponse> {
     const currentState: CurrentPaymentState = {
+        accountId: params.accountId,
         value: params.value,
         authorizationToken: undefined,
         applicationMutation1: undefined,
@@ -35,10 +40,11 @@ export async function authorizePayment(params: AuthorizePaymentRequest): Promise
         finalization: undefined,
         finalizable: undefined,
         paymentId: workflowInfo().workflowId,
+        paymentCompletionId: `comp_${params.paymentId}`,
     }
 
     setHandler(currentWorkflowStateQueryDef, (params: QueryQueryWorkflowArgs) => currentState)
-    
+
     try {
         currentState.authorizationToken = await doAuthorizePayment(params)
         currentState.authorization = await getAuthorization(currentState.authorizationToken)

@@ -4,9 +4,7 @@
 
     export let workflowState: CurrentPaymentState
 
-
     function calcApprovalState(auth: PaymentAuthorizationResponse | undefined) {
-
         if (!auth) {
             return 0
         }
@@ -18,16 +16,10 @@
     }
 </script>
 
-<div class='card card-body w-96'>
-    {#if workflowState?.authorization?.approved}
-        <div>APP</div>
-    {/if}
-
+<div class='card card-body w-120'>
     {#if workflowState}
-        <dl>
-            <dt>Value</dt>
-            <dd>{workflowState.value}</dd>
-        </dl>
+        <p><span class='font-extrabold mr-8'>Account ID:</span><span>{workflowState.accountId}</span></p>
+        <p><span class='font-extrabold mr-8'>Amount:</span><span>{workflowState.value}</span></p>
         <ul class="max-w-md space-y-1 list-inside">
             <li class="flex">
                 <StateItem state={calcApprovalState(workflowState?.authorization)}

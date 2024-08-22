@@ -21,7 +21,6 @@
             return
         }
         workflowState = data.workflowState
-        console.log('setting workflowState', data.workflowState)
     }
 
     const stateStore = queryStore({
@@ -47,11 +46,7 @@
         client: getContextClient(),
         query: SubCurrentPaymentStateDocument,
         variables: {input: {workflowId}}
-    }, (arg1, arg2) => {
-        console.log('arg1', arg1)
-        console.log('arg2', arg2)
-        handleData(arg1, arg2)
-    })
+    }, handleData)
     let unsub = messages.subscribe(arg => {
         return () => {
         }
