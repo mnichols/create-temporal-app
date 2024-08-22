@@ -1,15 +1,17 @@
 import type * as activities from './activities.js'
+import {CaptureRequest, CurrentPaymentState, QueryQueryWorkflowArgs} from '../../gql/index.js'
 import {
-    CurrentWorkflowState,
-    MarkFinalizableRequest,
-    QueryQueryWorkflowArgs,
-    StartWorkflowRequest
-} from '../../gql/index.js'
-import {condition, defineQuery, defineSignal, proxyActivities, setHandler, workflowInfo} from '@temporalio/workflow'
+    ApplicationFailure,
+    condition,
+    defineQuery,
+    defineSignal,
+    proxyActivities,
+    setHandler
+} from '@temporalio/workflow'
 
 
 const {
-    validate,
+    capture,
     mutateApplication,
     begin,
     finalize,
@@ -18,49 +20,44 @@ const {
     startToCloseTimeout: '10 seconds',
 })
 
-const signalMarkFinalizable = 'markFinalizable'
+const signalMarkFinalizable = 'capture'
 const queryCurrentWorkflowState = 'currentState'
 const currentWorkflowStateQueryDef =
-    defineQuery<CurrentWorkflowState, [QueryQueryWorkflowArgs]>(queryCurrentWorkflowState)
+    defineQuery<CurrentPaymentState, [QueryQueryWorkflowArgs]>(queryCurrentWorkflowState)
 
-const markFinalizableSignalDef = defineSignal<[MarkFinalizableRequest]>(signalMarkFinalizable)
+const markFinalizableSignalDef = defineSignal<[CaptureRequest]>(signalMarkFinalizable)
 
-export async function completePayment(params: StartWorkflowRequest): Promise<CurrentWorkflowState> {
-    const currentState: CurrentWorkflowState = {
-        value: params.value,
-        validation: undefined,
-        applicationMutation1: undefined,
-        applicationMutation2: undefined,
-        compensation: undefined,
-        beginning: undefined,
-        finalization: undefined,
-        finalizable: undefined,
-        workflowId: workflowInfo().workflowId,
-    }
+export async function completePayment(params: CurrentPaymentState): Promise<CurrentPaymentState> {
+    const currentState: CurrentPaymentState = params
+    let captureRequested: CaptureRequest | undefined
 
     setHandler(currentWorkflowStateQueryDef, (params: QueryQueryWorkflowArgs) => currentState)
-    setHandler(markFinalizableSignalDef, (signalValue: MarkFinalizableRequest) => {
-        currentState.finalizable = signalValue.value
+    setHandler(markFinalizableSignalDef, (signalValue: CaptureRequest) => {
+        captureRequested = signalValue
     })
-    try {
-        currentState.validation = await validate(params)
-        currentState.applicationMutation1 = await mutateApplication(params)
-        currentState.applicationMutation2 = await mutateApplication(params)
-    } catch (err) {
-        currentState.compensation = await compensate(params)
-        throw err
+    if (!params.authorization?.approved) {
+        throw ApplicationFailure.create({message: "Only approved payments may be completed."})
     }
 
-    if (params.reply) {
-        const reply = proxyActivities({
-            taskQueue: params.reply.taskQueue,
-            startToCloseTimeout: '10 seconds',
-        })
+    const conditionMet = await condition(() => !!captureRequested, 1000 * 180)
 
-        currentState.reply = await reply[params.reply.activityName](params.reply)
+    if (!conditionMet) {
+        // payment was never captured so release the authorization
+        return currentState
     }
+
+    if (captureRequested) {
+        try {
+            currentState.capture = await capture(captureRequested)
+        } catch (err) {
+            currentState.compensation = await compensate(params)
+            throw err
+        }
+    }
+
+
     currentState.beginning = await begin(params)
-    await condition(() => !!currentState.finalizable, 1000 * 180)
+
     currentState.finalization = await finalize(params)
     return currentState
 }

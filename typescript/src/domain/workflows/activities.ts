@@ -2,6 +2,8 @@ import {
     AuthorizePaymentRequest,
     BeginRequest,
     BeginResponse,
+    CaptureRequest,
+    CaptureResponse,
     CompensateRequest,
     CompensateResponse,
     FinalizeRequest,
@@ -42,6 +44,10 @@ export async function getAuthorization(token: string): Promise<PaymentAuthorizat
         approved: !token.includes('declined'),
         value: parts[2]
     }
+}
+
+export async function capture(params: CaptureRequest): Promise<CaptureResponse> {
+    return {value: params.value}
 }
 
 export async function mutateApplication(params: MutateApplicationRequest): Promise<MutateApplicationResponse> {

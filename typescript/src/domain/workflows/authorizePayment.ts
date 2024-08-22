@@ -3,11 +3,18 @@ import {
     AuthorizePaymentRequest,
     AuthorizePaymentResponse,
     CurrentPaymentState,
-    MarkFinalizableRequest,
     QueryQueryWorkflowArgs
 } from '../../gql/index.js'
-import {defineQuery, defineSignal, proxyActivities, setHandler, workflowInfo} from '@temporalio/workflow'
+import {
+    defineQuery,
+    ParentClosePolicy,
+    proxyActivities,
+    setHandler,
+    startChild,
+    workflowInfo
+} from '@temporalio/workflow'
 import {ERR_ISSUER_SERVICE_FAILURE} from './errors.js'
+import {completePayment} from './completePayment.js'
 
 
 const {
@@ -21,19 +28,17 @@ const {
     }
 })
 
-const signalMarkFinalizable = 'markFinalizable'
 const queryCurrentWorkflowState = 'currentState'
 const currentWorkflowStateQueryDef =
     defineQuery<CurrentPaymentState, [QueryQueryWorkflowArgs]>(queryCurrentWorkflowState)
-
-const markFinalizableSignalDef = defineSignal<[MarkFinalizableRequest]>(signalMarkFinalizable)
 
 export async function authorizePayment(params: AuthorizePaymentRequest): Promise<AuthorizePaymentResponse> {
     const currentState: CurrentPaymentState = {
         accountId: params.accountId,
         value: params.value,
         authorizationToken: undefined,
-        applicationMutation1: undefined,
+        authorization: undefined,
+        capture: undefined,
         applicationMutation2: undefined,
         compensation: undefined,
         beginning: undefined,
@@ -53,6 +58,12 @@ export async function authorizePayment(params: AuthorizePaymentRequest): Promise
         throw err
     }
 
+
+    await startChild(completePayment, {
+        workflowId: currentState.paymentCompletionId,
+        args: [currentState],
+        parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
+    })
     return {
         token: currentState.authorizationToken,
         value: currentState.value,

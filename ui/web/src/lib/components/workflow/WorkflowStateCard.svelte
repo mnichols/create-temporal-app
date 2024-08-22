@@ -25,6 +25,10 @@
                 <StateItem state={calcApprovalState(workflowState?.authorization)}
                            value={`token is ${workflowState?.authorization?.token}`} label='authorization'/>
             </li>
+            <li class='flex'>
+                <StateItem state={calcApprovalState(workflowState?.capture)}
+                           value={`captured amount is ${workflowState?.capture?.value}`} label='capture funds'/>
+            </li>
             <!--            <li class="flex">-->
             <!--                <StateItem isCompleted={!!workflowState.applicationMutation1} item={workflowState?.applicationMutation1}-->
             <!--                           label='applicationMutation1'/>-->

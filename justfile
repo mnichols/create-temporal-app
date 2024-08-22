@@ -21,6 +21,6 @@ run_ts_pubsub:
     @echo "Starting TypeScript PubSub at $PUBLIC_SUBSCRIPTIONS_URL"
     npm run pubsub --prefix typescript
 
-run_ts_domain: && local_temporal
+run_ts_domain:
     @echo "Starting TypeScript Domain $TEMPORAL_CONNECTION_MTLS_KEY_FILE"
     npm start --prefix typescript

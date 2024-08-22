@@ -12,13 +12,12 @@ type CurrentPaymentState {
     value: String!
     authorizationToken: String
     authorization: PaymentAuthorizationResponse
-    applicationMutation1: MutateApplicationResponse
+    capture: CaptureResponse
     applicationMutation2: MutateApplicationResponse
     compensation: CompensateResponse
-    reply: PaymentAuthorizationResponse
     beginning: BeginResponse
     finalizable: String
-    finalization: FinalizeResponse
+    finalization: CaptureResponse
     paymentId: String!
     paymentCompletionId: String!
 }
@@ -70,6 +69,12 @@ type PaymentAuthorizationResponse {
 input MutateApplicationRequest {
     value: String!
 }
+input CaptureRequest {
+    value: String!
+}
+type CaptureResponse {
+    value: String!
+}
 type MutateApplicationResponse {
     value: String!
 }
@@ -99,7 +104,7 @@ type BeginResponse {
     value: String!
 }
 
-input MarkFinalizableRequest {
+input CaptureRequest {
     workflowId: String!
     value: String!
 }
@@ -126,7 +131,7 @@ type QueryResponse {
 
 type Mutation {
     authorizePayment(input: AuthorizePaymentRequest!): AuthorizePaymentResponse!
-    markFinalizable(input: MarkFinalizableRequest!): FinalizeResponse!
+    capture(input: CaptureRequest!): FinalizeResponse!
 }
 type Query {
     appInfo: AppInfo!

@@ -6,6 +6,7 @@
     import {onDestroy} from 'svelte'
     import WorkflowStateCard from '$lib/components/workflow/WorkflowStateCard.svelte'
     import {Logger} from '$lib/log/index.js'
+    import SignalMarkFinalizable from '$lib/components/workflow/SignalMarkFinalizable.svelte'
 
     let workflowId = $page.params.workflowId
 
@@ -61,4 +62,10 @@
 <div class='flex flex-col'>
     <WorkflowStateCard workflowState={workflowState}/>
 </div>
+{#if workflowState && !workflowState.finalization}
+    <div class='flex flex-col border-8 border-accent'>
+        <SignalMarkFinalizable workflowState={workflowState}/>
+    </div>
+{/if}
+
 

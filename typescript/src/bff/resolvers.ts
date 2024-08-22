@@ -4,7 +4,7 @@ import {
     CurrentPaymentState,
     FinalizeResponse,
     MutationAuthorizePaymentArgs,
-    MutationMarkFinalizableArgs,
+    MutationCaptureArgs,
     QueryQueryWorkflowArgs,
     Resolvers,
 } from '../gql/index.js'
@@ -23,9 +23,9 @@ export const createResolvers = (client: Client): Resolvers => {
                 })
                 return res
             },
-            markFinalizable: async (_, args: Required<MutationMarkFinalizableArgs>): Promise<FinalizeResponse> => {
+            capture: async (_, args: Required<MutationCaptureArgs>): Promise<FinalizeResponse> => {
                 let wf = client.workflow.getHandle(args.input?.workflowId || 'notfound')
-                await wf.signal('markFinalizable', args.input)
+                await wf.signal('capture', args.input)
                 return args.input
             }
         },

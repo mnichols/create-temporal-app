@@ -45,6 +45,16 @@ export type BeginResponse = {
   value: Scalars['String']['output'];
 };
 
+export type CaptureRequest = {
+  value: Scalars['String']['input'];
+  workflowId: Scalars['String']['input'];
+};
+
+export type CaptureResponse = {
+  __typename?: 'CaptureResponse';
+  value: Scalars['String']['output'];
+};
+
 export type CompensateRequest = {
   value: Scalars['String']['input'];
 };
@@ -57,17 +67,16 @@ export type CompensateResponse = {
 export type CurrentPaymentState = {
   __typename?: 'CurrentPaymentState';
   accountId: Scalars['String']['output'];
-  applicationMutation1?: Maybe<MutateApplicationResponse>;
   applicationMutation2?: Maybe<MutateApplicationResponse>;
   authorization?: Maybe<PaymentAuthorizationResponse>;
   authorizationToken?: Maybe<Scalars['String']['output']>;
   beginning?: Maybe<BeginResponse>;
+  capture?: Maybe<CaptureResponse>;
   compensation?: Maybe<CompensateResponse>;
   finalizable?: Maybe<Scalars['String']['output']>;
-  finalization?: Maybe<FinalizeResponse>;
+  finalization?: Maybe<CaptureResponse>;
   paymentCompletionId: Scalars['String']['output'];
   paymentId: Scalars['String']['output'];
-  reply?: Maybe<PaymentAuthorizationResponse>;
   value: Scalars['String']['output'];
 };
 
@@ -82,11 +91,6 @@ export type FinalizeResponse = {
   workflowId: Scalars['String']['output'];
 };
 
-export type MarkFinalizableRequest = {
-  value: Scalars['String']['input'];
-  workflowId: Scalars['String']['input'];
-};
-
 export type MutateApplicationRequest = {
   value: Scalars['String']['input'];
 };
@@ -99,7 +103,7 @@ export type MutateApplicationResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   authorizePayment: AuthorizePaymentResponse;
-  markFinalizable: FinalizeResponse;
+  capture: FinalizeResponse;
 };
 
 
@@ -108,8 +112,8 @@ export type MutationAuthorizePaymentArgs = {
 };
 
 
-export type MutationMarkFinalizableArgs = {
-  input: MarkFinalizableRequest;
+export type MutationCaptureArgs = {
+  input: CaptureRequest;
 };
 
 export type PaymentAuthorizationResponse = {
@@ -281,12 +285,13 @@ export type ResolversTypes = {
   BeginRequest: BeginRequest;
   BeginResponse: ResolverTypeWrapper<BeginResponse>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CaptureRequest: CaptureRequest;
+  CaptureResponse: ResolverTypeWrapper<CaptureResponse>;
   CompensateRequest: CompensateRequest;
   CompensateResponse: ResolverTypeWrapper<CompensateResponse>;
   CurrentPaymentState: ResolverTypeWrapper<CurrentPaymentState>;
   FinalizeRequest: FinalizeRequest;
   FinalizeResponse: ResolverTypeWrapper<FinalizeResponse>;
-  MarkFinalizableRequest: MarkFinalizableRequest;
   MutateApplicationRequest: MutateApplicationRequest;
   MutateApplicationResponse: ResolverTypeWrapper<MutateApplicationResponse>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -315,12 +320,13 @@ export type ResolversParentTypes = {
   BeginRequest: BeginRequest;
   BeginResponse: BeginResponse;
   Boolean: Scalars['Boolean']['output'];
+  CaptureRequest: CaptureRequest;
+  CaptureResponse: CaptureResponse;
   CompensateRequest: CompensateRequest;
   CompensateResponse: CompensateResponse;
   CurrentPaymentState: CurrentPaymentState;
   FinalizeRequest: FinalizeRequest;
   FinalizeResponse: FinalizeResponse;
-  MarkFinalizableRequest: MarkFinalizableRequest;
   MutateApplicationRequest: MutateApplicationRequest;
   MutateApplicationResponse: MutateApplicationResponse;
   Mutation: {};
@@ -360,6 +366,11 @@ export type BeginResponseResolvers<ContextType = any, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CaptureResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CaptureResponse'] = ResolversParentTypes['CaptureResponse']> = {
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CompensateResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CompensateResponse'] = ResolversParentTypes['CompensateResponse']> = {
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -367,17 +378,16 @@ export type CompensateResponseResolvers<ContextType = any, ParentType extends Re
 
 export type CurrentPaymentStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['CurrentPaymentState'] = ResolversParentTypes['CurrentPaymentState']> = {
   accountId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  applicationMutation1?: Resolver<Maybe<ResolversTypes['MutateApplicationResponse']>, ParentType, ContextType>;
   applicationMutation2?: Resolver<Maybe<ResolversTypes['MutateApplicationResponse']>, ParentType, ContextType>;
   authorization?: Resolver<Maybe<ResolversTypes['PaymentAuthorizationResponse']>, ParentType, ContextType>;
   authorizationToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   beginning?: Resolver<Maybe<ResolversTypes['BeginResponse']>, ParentType, ContextType>;
+  capture?: Resolver<Maybe<ResolversTypes['CaptureResponse']>, ParentType, ContextType>;
   compensation?: Resolver<Maybe<ResolversTypes['CompensateResponse']>, ParentType, ContextType>;
   finalizable?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  finalization?: Resolver<Maybe<ResolversTypes['FinalizeResponse']>, ParentType, ContextType>;
+  finalization?: Resolver<Maybe<ResolversTypes['CaptureResponse']>, ParentType, ContextType>;
   paymentCompletionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   paymentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  reply?: Resolver<Maybe<ResolversTypes['PaymentAuthorizationResponse']>, ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -395,7 +405,7 @@ export type MutateApplicationResponseResolvers<ContextType = any, ParentType ext
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   authorizePayment?: Resolver<ResolversTypes['AuthorizePaymentResponse'], ParentType, ContextType, RequireFields<MutationAuthorizePaymentArgs, 'input'>>;
-  markFinalizable?: Resolver<ResolversTypes['FinalizeResponse'], ParentType, ContextType, RequireFields<MutationMarkFinalizableArgs, 'input'>>;
+  capture?: Resolver<ResolversTypes['FinalizeResponse'], ParentType, ContextType, RequireFields<MutationCaptureArgs, 'input'>>;
 };
 
 export type PaymentAuthorizationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaymentAuthorizationResponse'] = ResolversParentTypes['PaymentAuthorizationResponse']> = {
@@ -463,6 +473,7 @@ export type Resolvers<ContextType = any> = {
   AppInfo?: AppInfoResolvers<ContextType>;
   AuthorizePaymentResponse?: AuthorizePaymentResponseResolvers<ContextType>;
   BeginResponse?: BeginResponseResolvers<ContextType>;
+  CaptureResponse?: CaptureResponseResolvers<ContextType>;
   CompensateResponse?: CompensateResponseResolvers<ContextType>;
   CurrentPaymentState?: CurrentPaymentStateResolvers<ContextType>;
   FinalizeResponse?: FinalizeResponseResolvers<ContextType>;

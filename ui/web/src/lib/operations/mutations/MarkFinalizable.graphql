@@ -1,5 +1,0 @@
-mutation MarkFinalizable($input: MarkFinalizableRequest!) {
-    markFinalizable(input: $input) {
-        workflowId,
-    }
-}

@@ -5,12 +5,8 @@ query QueryWorkflow($input: QueryRequest) {
         value,
         authorizationToken,
         authorization { token, value, approved }
-        applicationMutation1 { value },
-        applicationMutation2 { value },
-        compensation { value },
-        reply { value},
-        beginning { value },
-        finalizable,
-        finalization { value }
+        capture { value },
+        finalization { value },
+        paymentCompletionId,
     }
 }
