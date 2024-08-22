@@ -12,6 +12,14 @@
     let startedWorkflowId: string | undefined | null
     let error: string | undefined | null
 
+    const clear = () => {
+        if (error || startedWorkflowId) {
+            defaultId = humanId({capitalize: false, separator: '-'})
+        }
+        error = undefined
+        startedWorkflowId = undefined
+    }
+
     async function startWorkflow(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement);
         startedWorkflowId = formData.get('id')
@@ -39,23 +47,27 @@
     }
 </script>
 
-<form on:submit|preventDefault={startWorkflow} class='flex flex-col'>
-    <label for='id' class='label'>
-        <span class='label-text'>Payment ID</span>
+<form on:submit|preventDefault={startWorkflow} class='flex flex-col prose border-2 border-primary rounded-2xl p-4'>
+    <header>
+        <h1 class='prose prose-h1:prose-slate prose-2xl'>Make Payment</h1>
+    </header>
+    <label for='id' class='flex justify-between align-middle items-center'>
+        <span class='label label-text'>Payment ID</span>
         <input type='text' name='id' placeholder='Enter id here' required
                class='input w-full max-w-xs'
                value={defaultId}/>
     </label>
-    <label for='account-id' class='label'>
-        <span class='label-text'>Account ID</span>
-        <input type='text' name='account-id' placeholder='Enter value here' required class='input w-full max-w-xs'/>
+    <label for='account-id' class='flex justify-between align-middle items-center'>
+        <span class='label label-text'>Account ID</span>
+        <input type='text' name='account-id' placeholder='Enter value here' required class='input w-full max-w-xs'
+               on:change={clear}/>
     </label>
 
-    <label for='workflow-value' class='label'>
-        <span class='label-text'>Amount</span>
+    <label for='workflow-value' class='flex justify-between align-middle items-center'>
+        <span class='label label-text'>Amount</span>
         <input type='text' name='workflow-value' placeholder='Enter value here' required class='input w-full max-w-xs'/>
     </label>
-    <button type='submit' class='btn accent-green-200' disabled={!!startedWorkflowId}>Make Payment</button>
+    <button type='submit' class='btn btn-primary m-4' disabled={!!startedWorkflowId}>Submit</button>
     {#if startedWorkflowId}
         <div>
             <WorkflowLink workflowId={startedWorkflowId} label='Workflow {startedWorkflowId}'/>

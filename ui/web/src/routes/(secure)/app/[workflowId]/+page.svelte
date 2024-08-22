@@ -77,7 +77,7 @@
     <WorkflowStateCard workflowState={workflowState}/>
 </div>
 {#if workflowState && !workflowState.finalization && workflowState.authorization?.approved}
-    <div class='flex flex-col border-8 border-slate-800 rounded-2xl w-96'>
+    <div class='flex flex-col border-2 border-slate-800 rounded-2xl w-96 p-4'>
         <SignalMarkFinalizable workflowState={workflowState}/>
     </div>
 {/if}

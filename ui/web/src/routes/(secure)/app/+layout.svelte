@@ -21,7 +21,7 @@
                 <img src={temporalCloud} alt='Temporal Cloud'/>
             </a>
         </div>
-        <h1>{$settings.appInfo.name}</h1>
+        <h1 class='prose prose-2xl'>{$settings.appInfo.name}</h1>
         <div class='corner'>
             <a href='http://localhost:8233' target='_blank'>
                 <img src={temporalLocal} alt='Temporal Local'/>
