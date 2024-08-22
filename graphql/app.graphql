@@ -7,17 +7,18 @@ type AppInfo {
     name: String!
 }
 
-type CurrentWorkflowState {
+type CurrentPaymentState {
     value: String!
-    validation: ValidateResponse
+    authorizationToken: String
+    authorization: PaymentAuthorizationResponse
     applicationMutation1: MutateApplicationResponse
     applicationMutation2: MutateApplicationResponse
     compensation: CompensateResponse
-    reply: ReplyResponse
+    reply: PaymentAuthorizationResponse
     beginning: BeginResponse
     finalizable: String
     finalization: FinalizeResponse
-    workflowId: String!
+    paymentId: String!
 }
 
 type Scenarios {
@@ -40,17 +41,27 @@ type ScenarioDefinition {
     applicationFailure: String
     exception: String
 }
-
-input StartWorkflowRequest {
-    workflowId: String!
+input AuthorizePaymentRequest {
+    paymentId: String!
     value: String!
-    reply: ReplyRequest
+    accountId: String!
 }
 
 input ValidateRequest {
     value: String!
 }
 type ValidateResponse {
+    value: String!
+}
+type AuthorizePaymentResponse {
+    paymentId: String!
+    token: String!
+    value: String!
+    approved: Boolean!
+}
+type PaymentAuthorizationResponse {
+    approved: Boolean!
+    token: String!
     value: String!
 }
 
@@ -73,11 +84,11 @@ input ReplyRequest {
     taskQueue: String!
     activityName: String!
 }
-type ReplyResponse {
-    workflowId: String!
-    id: String!
-    value: String!
-}
+#type PaymentAuthorizationResponse {
+#    workflowId: String!
+#    id: String!
+#    value: String!
+#}
 
 input BeginRequest {
     value: String!
@@ -112,14 +123,14 @@ type QueryResponse {
 }
 
 type Mutation {
-    startWorkflow(input: StartWorkflowRequest!): ReplyResponse!
+    authorizePayment(input: AuthorizePaymentRequest!): AuthorizePaymentResponse!
     markFinalizable(input: MarkFinalizableRequest!): FinalizeResponse!
 }
 type Query {
     appInfo: AppInfo!
-    queryWorkflow(input: QueryRequest): CurrentWorkflowState!
+    queryWorkflow(input: QueryRequest): CurrentPaymentState!
     scenarioDefinitions: ScenarioDefinitions!
 }
 type Subscription {
-    workflowState(input: WorkflowStateRequest!): CurrentWorkflowState!
+    workflowState(input: WorkflowStateRequest!): CurrentPaymentState!
 }

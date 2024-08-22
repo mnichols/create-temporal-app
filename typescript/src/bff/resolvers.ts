@@ -1,11 +1,11 @@
 import {
     AppInfo,
-    CurrentWorkflowState,
+    AuthorizePaymentResponse,
+    CurrentPaymentState,
     FinalizeResponse,
+    MutationAuthorizePaymentArgs,
     MutationMarkFinalizableArgs,
-    MutationStartWorkflowArgs,
     QueryQueryWorkflowArgs,
-    ReplyResponse,
     Resolvers,
 } from '../gql/index.js'
 import {Client} from '@temporalio/client'
@@ -15,14 +15,13 @@ import {cfg} from '../config/index.js'
 export const createResolvers = (client: Client): Resolvers => {
     const res: Resolvers = {
         Mutation: {
-            startWorkflow: async (_, args: Required<MutationStartWorkflowArgs>): Promise<ReplyResponse> => {
-                let run = await client.workflow.start(authorizePayment, {
+            authorizePayment: async (_, args: Required<MutationAuthorizePaymentArgs>): Promise<AuthorizePaymentResponse> => {
+                let res = await client.workflow.execute(authorizePayment, {
                     args: [args.input],
                     taskQueue: cfg.Temporal.worker.taskQueue,
-                    workflowId: args.input.workflowId,
+                    workflowId: args.input.paymentId,
                 })
-
-                return {value: args.input.value, id: args.input.workflowId, workflowId: run.workflowId}
+                return res
             },
             markFinalizable: async (_, args: Required<MutationMarkFinalizableArgs>): Promise<FinalizeResponse> => {
                 let wf = client.workflow.getHandle(args.input?.workflowId || 'notfound')
@@ -31,7 +30,7 @@ export const createResolvers = (client: Client): Resolvers => {
             }
         },
         Query: {
-            queryWorkflow: async (_, args: QueryQueryWorkflowArgs): Promise<CurrentWorkflowState> => {
+            queryWorkflow: async (_, args: QueryQueryWorkflowArgs): Promise<CurrentPaymentState> => {
 
                 let wf = client.workflow.getHandle(args.input?.workflowId || 'notfound')
                 return wf.query('currentState')

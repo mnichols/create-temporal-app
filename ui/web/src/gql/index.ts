@@ -24,6 +24,20 @@ export type AppInfo = {
   temporal: TemporalConnection;
 };
 
+export type AuthorizePaymentRequest = {
+  accountId: Scalars['String']['input'];
+  paymentId: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+};
+
+export type AuthorizePaymentResponse = {
+  __typename?: 'AuthorizePaymentResponse';
+  approved: Scalars['Boolean']['output'];
+  paymentId: Scalars['String']['output'];
+  token: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
 export type BeginRequest = {
   value: Scalars['String']['input'];
 };
@@ -42,18 +56,19 @@ export type CompensateResponse = {
   value: Scalars['String']['output'];
 };
 
-export type CurrentWorkflowState = {
-  __typename?: 'CurrentWorkflowState';
+export type CurrentPaymentState = {
+  __typename?: 'CurrentPaymentState';
   applicationMutation1?: Maybe<MutateApplicationResponse>;
   applicationMutation2?: Maybe<MutateApplicationResponse>;
+  authorization?: Maybe<PaymentAuthorizationResponse>;
+  authorizationToken?: Maybe<Scalars['String']['output']>;
   beginning?: Maybe<BeginResponse>;
   compensation?: Maybe<CompensateResponse>;
   finalizable?: Maybe<Scalars['String']['output']>;
   finalization?: Maybe<FinalizeResponse>;
-  reply?: Maybe<ReplyResponse>;
-  validation?: Maybe<ValidateResponse>;
+  paymentId: Scalars['String']['output'];
+  reply?: Maybe<PaymentAuthorizationResponse>;
   value: Scalars['String']['output'];
-  workflowId: Scalars['String']['output'];
 };
 
 export type DoPingInput = {
@@ -87,9 +102,14 @@ export type MutateApplicationResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  authorizePayment: AuthorizePaymentResponse;
   doPing?: Maybe<Pong>;
   markFinalizable: FinalizeResponse;
-  startWorkflow: ReplyResponse;
+};
+
+
+export type MutationAuthorizePaymentArgs = {
+  input: AuthorizePaymentRequest;
 };
 
 
@@ -102,9 +122,11 @@ export type MutationMarkFinalizableArgs = {
   input: MarkFinalizableRequest;
 };
 
-
-export type MutationStartWorkflowArgs = {
-  input: StartWorkflowRequest;
+export type PaymentAuthorizationResponse = {
+  __typename?: 'PaymentAuthorizationResponse';
+  approved: Scalars['Boolean']['output'];
+  token: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type PingInput = {
@@ -123,7 +145,7 @@ export type Query = {
   appInfo: AppInfo;
   ping?: Maybe<Pong>;
   pong?: Maybe<Pong>;
-  queryWorkflow: CurrentWorkflowState;
+  queryWorkflow: CurrentPaymentState;
   scenarioDefinitions: ScenarioDefinitions;
 };
 
@@ -158,13 +180,6 @@ export type ReplyRequest = {
   value: Scalars['String']['input'];
 };
 
-export type ReplyResponse = {
-  __typename?: 'ReplyResponse';
-  id: Scalars['String']['output'];
-  value: Scalars['String']['output'];
-  workflowId: Scalars['String']['output'];
-};
-
 export type Scenario = {
   __typename?: 'Scenario';
   active: Scalars['Boolean']['output'];
@@ -193,12 +208,6 @@ export type Scenarios = {
   scenarios: Array<Scenario>;
 };
 
-export type StartWorkflowRequest = {
-  reply?: InputMaybe<ReplyRequest>;
-  value: Scalars['String']['input'];
-  workflowId: Scalars['String']['input'];
-};
-
 export type SubPingInput = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
@@ -206,7 +215,7 @@ export type SubPingInput = {
 export type Subscription = {
   __typename?: 'Subscription';
   subPing?: Maybe<Pong>;
-  workflowState: CurrentWorkflowState;
+  workflowState: CurrentPaymentState;
 };
 
 
@@ -238,19 +247,19 @@ export type WorkflowStateRequest = {
   workflowId: Scalars['String']['input'];
 };
 
+export type AuthorizePaymentMutationVariables = Exact<{
+  input: AuthorizePaymentRequest;
+}>;
+
+
+export type AuthorizePaymentMutation = { __typename?: 'Mutation', authorizePayment: { __typename?: 'AuthorizePaymentResponse', paymentId: string, value: string, token: string } };
+
 export type MarkFinalizableMutationVariables = Exact<{
   input: MarkFinalizableRequest;
 }>;
 
 
 export type MarkFinalizableMutation = { __typename?: 'Mutation', markFinalizable: { __typename?: 'FinalizeResponse', workflowId: string } };
-
-export type StartWorkflowMutationVariables = Exact<{
-  input: StartWorkflowRequest;
-}>;
-
-
-export type StartWorkflowMutation = { __typename?: 'Mutation', startWorkflow: { __typename?: 'ReplyResponse', workflowId: string, value: string } };
 
 export type AppInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -276,19 +285,19 @@ export type QueryWorkflowQueryVariables = Exact<{
 }>;
 
 
-export type QueryWorkflowQuery = { __typename?: 'Query', queryWorkflow: { __typename?: 'CurrentWorkflowState', workflowId: string, value: string, finalizable?: string | null, validation?: { __typename?: 'ValidateResponse', value: string } | null, applicationMutation1?: { __typename?: 'MutateApplicationResponse', value: string } | null, applicationMutation2?: { __typename?: 'MutateApplicationResponse', value: string } | null, compensation?: { __typename?: 'CompensateResponse', value: string } | null, reply?: { __typename?: 'ReplyResponse', value: string } | null, beginning?: { __typename?: 'BeginResponse', value: string } | null, finalization?: { __typename?: 'FinalizeResponse', value: string } | null } };
+export type QueryWorkflowQuery = { __typename?: 'Query', queryWorkflow: { __typename?: 'CurrentPaymentState', paymentId: string, value: string, authorizationToken?: string | null, finalizable?: string | null, authorization?: { __typename?: 'PaymentAuthorizationResponse', token: string, value: string, approved: boolean } | null, applicationMutation1?: { __typename?: 'MutateApplicationResponse', value: string } | null, applicationMutation2?: { __typename?: 'MutateApplicationResponse', value: string } | null, compensation?: { __typename?: 'CompensateResponse', value: string } | null, reply?: { __typename?: 'PaymentAuthorizationResponse', value: string } | null, beginning?: { __typename?: 'BeginResponse', value: string } | null, finalization?: { __typename?: 'FinalizeResponse', value: string } | null } };
 
 export type ScenarioDefinitionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ScenarioDefinitionsQuery = { __typename?: 'Query', scenarioDefinitions: { __typename?: 'ScenarioDefinitions', definitions: Array<{ __typename?: 'ScenarioDefinition', id: string, title: string, applicationFailure?: string | null, exception?: string | null }> } };
 
-export type SubCurrentWorkflowStateSubscriptionVariables = Exact<{
+export type SubCurrentPaymentStateSubscriptionVariables = Exact<{
   input: WorkflowStateRequest;
 }>;
 
 
-export type SubCurrentWorkflowStateSubscription = { __typename?: 'Subscription', workflowState: { __typename?: 'CurrentWorkflowState', workflowId: string, value: string, finalizable?: string | null, validation?: { __typename?: 'ValidateResponse', value: string } | null, applicationMutation1?: { __typename?: 'MutateApplicationResponse', value: string } | null, applicationMutation2?: { __typename?: 'MutateApplicationResponse', value: string } | null, compensation?: { __typename?: 'CompensateResponse', value: string } | null, reply?: { __typename?: 'ReplyResponse', value: string } | null, beginning?: { __typename?: 'BeginResponse', value: string } | null, finalization?: { __typename?: 'FinalizeResponse', value: string } | null } };
+export type SubCurrentPaymentStateSubscription = { __typename?: 'Subscription', workflowState: { __typename?: 'CurrentPaymentState', paymentId: string, value: string, finalizable?: string | null, authorization?: { __typename?: 'PaymentAuthorizationResponse', token: string, approved: boolean } | null, applicationMutation1?: { __typename?: 'MutateApplicationResponse', value: string } | null, applicationMutation2?: { __typename?: 'MutateApplicationResponse', value: string } | null, compensation?: { __typename?: 'CompensateResponse', value: string } | null, beginning?: { __typename?: 'BeginResponse', value: string } | null, finalization?: { __typename?: 'FinalizeResponse', value: string } | null } };
 
 export type SubPingSubscriptionVariables = Exact<{
   input?: InputMaybe<SubPingInput>;
@@ -298,14 +307,14 @@ export type SubPingSubscriptionVariables = Exact<{
 export type SubPingSubscription = { __typename?: 'Subscription', subPing?: { __typename?: 'Pong', value?: string | null } | null };
 
 
+export const AuthorizePaymentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AuthorizePayment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AuthorizePaymentRequest"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authorizePayment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]} as unknown as DocumentNode<AuthorizePaymentMutation, AuthorizePaymentMutationVariables>;
 export const MarkFinalizableDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"MarkFinalizable"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MarkFinalizableRequest"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"markFinalizable"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"workflowId"}}]}}]}}]} as unknown as DocumentNode<MarkFinalizableMutation, MarkFinalizableMutationVariables>;
-export const StartWorkflowDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StartWorkflow"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"StartWorkflowRequest"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startWorkflow"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"workflowId"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<StartWorkflowMutation, StartWorkflowMutationVariables>;
 export const AppInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AppInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"appInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"temporal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"namespace"}},{"kind":"Field","name":{"kind":"Name","value":"taskQueue"}}]}}]}}]}}]} as unknown as DocumentNode<AppInfoQuery, AppInfoQueryVariables>;
 export const PingTestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PingTest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PingInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ping"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}}]}}]}}]} as unknown as DocumentNode<PingTestQuery, PingTestQueryVariables>;
 export const SveltePingTestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SveltePingTest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PingInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ping"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}}]}}]}}]} as unknown as DocumentNode<SveltePingTestQuery, SveltePingTestQueryVariables>;
-export const QueryWorkflowDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"QueryWorkflow"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"QueryRequest"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"queryWorkflow"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"workflowId"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"validation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"applicationMutation1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"applicationMutation2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"compensation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"reply"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"beginning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"finalizable"}},{"kind":"Field","name":{"kind":"Name","value":"finalization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<QueryWorkflowQuery, QueryWorkflowQueryVariables>;
+export const QueryWorkflowDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"QueryWorkflow"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"QueryRequest"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"queryWorkflow"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"authorizationToken"}},{"kind":"Field","name":{"kind":"Name","value":"authorization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"approved"}}]}},{"kind":"Field","name":{"kind":"Name","value":"applicationMutation1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"applicationMutation2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"compensation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"reply"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"beginning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"finalizable"}},{"kind":"Field","name":{"kind":"Name","value":"finalization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<QueryWorkflowQuery, QueryWorkflowQueryVariables>;
 export const ScenarioDefinitionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ScenarioDefinitions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"scenarioDefinitions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"definitions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"applicationFailure"}},{"kind":"Field","name":{"kind":"Name","value":"exception"}}]}}]}}]}}]} as unknown as DocumentNode<ScenarioDefinitionsQuery, ScenarioDefinitionsQueryVariables>;
-export const SubCurrentWorkflowStateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"SubCurrentWorkflowState"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"WorkflowStateRequest"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"workflowState"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"workflowId"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"validation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"applicationMutation1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"applicationMutation2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"compensation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"reply"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"beginning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"finalizable"}},{"kind":"Field","name":{"kind":"Name","value":"finalization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<SubCurrentWorkflowStateSubscription, SubCurrentWorkflowStateSubscriptionVariables>;
+export const SubCurrentPaymentStateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"SubCurrentPaymentState"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"WorkflowStateRequest"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"workflowState"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paymentId"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"authorization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"approved"}}]}},{"kind":"Field","name":{"kind":"Name","value":"applicationMutation1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"applicationMutation2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"compensation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"beginning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"finalizable"}},{"kind":"Field","name":{"kind":"Name","value":"finalization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<SubCurrentPaymentStateSubscription, SubCurrentPaymentStateSubscriptionVariables>;
 export const SubPingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"SubPing"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"SubPingInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subPing"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<SubPingSubscription, SubPingSubscriptionVariables>;
 
 
@@ -379,12 +388,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   AppInfo: ResolverTypeWrapper<AppInfo>;
+  AuthorizePaymentRequest: AuthorizePaymentRequest;
+  AuthorizePaymentResponse: ResolverTypeWrapper<AuthorizePaymentResponse>;
   BeginRequest: BeginRequest;
   BeginResponse: ResolverTypeWrapper<BeginResponse>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CompensateRequest: CompensateRequest;
   CompensateResponse: ResolverTypeWrapper<CompensateResponse>;
-  CurrentWorkflowState: ResolverTypeWrapper<CurrentWorkflowState>;
+  CurrentPaymentState: ResolverTypeWrapper<CurrentPaymentState>;
   DoPingInput: DoPingInput;
   FinalizeRequest: FinalizeRequest;
   FinalizeResponse: ResolverTypeWrapper<FinalizeResponse>;
@@ -392,18 +403,17 @@ export type ResolversTypes = {
   MutateApplicationRequest: MutateApplicationRequest;
   MutateApplicationResponse: ResolverTypeWrapper<MutateApplicationResponse>;
   Mutation: ResolverTypeWrapper<{}>;
+  PaymentAuthorizationResponse: ResolverTypeWrapper<PaymentAuthorizationResponse>;
   PingInput: PingInput;
   Pong: ResolverTypeWrapper<Pong>;
   Query: ResolverTypeWrapper<{}>;
   QueryRequest: QueryRequest;
   QueryResponse: ResolverTypeWrapper<QueryResponse>;
   ReplyRequest: ReplyRequest;
-  ReplyResponse: ResolverTypeWrapper<ReplyResponse>;
   Scenario: ResolverTypeWrapper<Scenario>;
   ScenarioDefinition: ResolverTypeWrapper<ScenarioDefinition>;
   ScenarioDefinitions: ResolverTypeWrapper<ScenarioDefinitions>;
   Scenarios: ResolverTypeWrapper<Scenarios>;
-  StartWorkflowRequest: StartWorkflowRequest;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   SubPingInput: SubPingInput;
   Subscription: ResolverTypeWrapper<{}>;
@@ -417,12 +427,14 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   AppInfo: AppInfo;
+  AuthorizePaymentRequest: AuthorizePaymentRequest;
+  AuthorizePaymentResponse: AuthorizePaymentResponse;
   BeginRequest: BeginRequest;
   BeginResponse: BeginResponse;
   Boolean: Scalars['Boolean']['output'];
   CompensateRequest: CompensateRequest;
   CompensateResponse: CompensateResponse;
-  CurrentWorkflowState: CurrentWorkflowState;
+  CurrentPaymentState: CurrentPaymentState;
   DoPingInput: DoPingInput;
   FinalizeRequest: FinalizeRequest;
   FinalizeResponse: FinalizeResponse;
@@ -430,18 +442,17 @@ export type ResolversParentTypes = {
   MutateApplicationRequest: MutateApplicationRequest;
   MutateApplicationResponse: MutateApplicationResponse;
   Mutation: {};
+  PaymentAuthorizationResponse: PaymentAuthorizationResponse;
   PingInput: PingInput;
   Pong: Pong;
   Query: {};
   QueryRequest: QueryRequest;
   QueryResponse: QueryResponse;
   ReplyRequest: ReplyRequest;
-  ReplyResponse: ReplyResponse;
   Scenario: Scenario;
   ScenarioDefinition: ScenarioDefinition;
   ScenarioDefinitions: ScenarioDefinitions;
   Scenarios: Scenarios;
-  StartWorkflowRequest: StartWorkflowRequest;
   String: Scalars['String']['output'];
   SubPingInput: SubPingInput;
   Subscription: {};
@@ -458,6 +469,14 @@ export type AppInfoResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type AuthorizePaymentResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthorizePaymentResponse'] = ResolversParentTypes['AuthorizePaymentResponse']> = {
+  approved?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  paymentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type BeginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['BeginResponse'] = ResolversParentTypes['BeginResponse']> = {
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -468,17 +487,18 @@ export type CompensateResponseResolvers<ContextType = any, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CurrentWorkflowStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['CurrentWorkflowState'] = ResolversParentTypes['CurrentWorkflowState']> = {
+export type CurrentPaymentStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['CurrentPaymentState'] = ResolversParentTypes['CurrentPaymentState']> = {
   applicationMutation1?: Resolver<Maybe<ResolversTypes['MutateApplicationResponse']>, ParentType, ContextType>;
   applicationMutation2?: Resolver<Maybe<ResolversTypes['MutateApplicationResponse']>, ParentType, ContextType>;
+  authorization?: Resolver<Maybe<ResolversTypes['PaymentAuthorizationResponse']>, ParentType, ContextType>;
+  authorizationToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   beginning?: Resolver<Maybe<ResolversTypes['BeginResponse']>, ParentType, ContextType>;
   compensation?: Resolver<Maybe<ResolversTypes['CompensateResponse']>, ParentType, ContextType>;
   finalizable?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   finalization?: Resolver<Maybe<ResolversTypes['FinalizeResponse']>, ParentType, ContextType>;
-  reply?: Resolver<Maybe<ResolversTypes['ReplyResponse']>, ParentType, ContextType>;
-  validation?: Resolver<Maybe<ResolversTypes['ValidateResponse']>, ParentType, ContextType>;
+  paymentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  reply?: Resolver<Maybe<ResolversTypes['PaymentAuthorizationResponse']>, ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  workflowId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -494,9 +514,16 @@ export type MutateApplicationResponseResolvers<ContextType = any, ParentType ext
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  authorizePayment?: Resolver<ResolversTypes['AuthorizePaymentResponse'], ParentType, ContextType, RequireFields<MutationAuthorizePaymentArgs, 'input'>>;
   doPing?: Resolver<Maybe<ResolversTypes['Pong']>, ParentType, ContextType, Partial<MutationDoPingArgs>>;
   markFinalizable?: Resolver<ResolversTypes['FinalizeResponse'], ParentType, ContextType, RequireFields<MutationMarkFinalizableArgs, 'input'>>;
-  startWorkflow?: Resolver<ResolversTypes['ReplyResponse'], ParentType, ContextType, RequireFields<MutationStartWorkflowArgs, 'input'>>;
+};
+
+export type PaymentAuthorizationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaymentAuthorizationResponse'] = ResolversParentTypes['PaymentAuthorizationResponse']> = {
+  approved?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type PongResolvers<ContextType = any, ParentType extends ResolversParentTypes['Pong'] = ResolversParentTypes['Pong']> = {
@@ -509,19 +536,12 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   appInfo?: Resolver<ResolversTypes['AppInfo'], ParentType, ContextType>;
   ping?: Resolver<Maybe<ResolversTypes['Pong']>, ParentType, ContextType, Partial<QueryPingArgs>>;
   pong?: Resolver<Maybe<ResolversTypes['Pong']>, ParentType, ContextType, Partial<QueryPongArgs>>;
-  queryWorkflow?: Resolver<ResolversTypes['CurrentWorkflowState'], ParentType, ContextType, Partial<QueryQueryWorkflowArgs>>;
+  queryWorkflow?: Resolver<ResolversTypes['CurrentPaymentState'], ParentType, ContextType, Partial<QueryQueryWorkflowArgs>>;
   scenarioDefinitions?: Resolver<ResolversTypes['ScenarioDefinitions'], ParentType, ContextType>;
 };
 
 export type QueryResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['QueryResponse'] = ResolversParentTypes['QueryResponse']> = {
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReplyResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReplyResponse'] = ResolversParentTypes['ReplyResponse']> = {
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  workflowId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -555,7 +575,7 @@ export type ScenariosResolvers<ContextType = any, ParentType extends ResolversPa
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
   subPing?: SubscriptionResolver<Maybe<ResolversTypes['Pong']>, "subPing", ParentType, ContextType, Partial<SubscriptionSubPingArgs>>;
-  workflowState?: SubscriptionResolver<ResolversTypes['CurrentWorkflowState'], "workflowState", ParentType, ContextType, RequireFields<SubscriptionWorkflowStateArgs, 'input'>>;
+  workflowState?: SubscriptionResolver<ResolversTypes['CurrentPaymentState'], "workflowState", ParentType, ContextType, RequireFields<SubscriptionWorkflowStateArgs, 'input'>>;
 };
 
 export type TemporalConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemporalConnection'] = ResolversParentTypes['TemporalConnection']> = {
@@ -575,16 +595,17 @@ export type ValidateResponseResolvers<ContextType = any, ParentType extends Reso
 
 export type Resolvers<ContextType = any> = {
   AppInfo?: AppInfoResolvers<ContextType>;
+  AuthorizePaymentResponse?: AuthorizePaymentResponseResolvers<ContextType>;
   BeginResponse?: BeginResponseResolvers<ContextType>;
   CompensateResponse?: CompensateResponseResolvers<ContextType>;
-  CurrentWorkflowState?: CurrentWorkflowStateResolvers<ContextType>;
+  CurrentPaymentState?: CurrentPaymentStateResolvers<ContextType>;
   FinalizeResponse?: FinalizeResponseResolvers<ContextType>;
   MutateApplicationResponse?: MutateApplicationResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  PaymentAuthorizationResponse?: PaymentAuthorizationResponseResolvers<ContextType>;
   Pong?: PongResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   QueryResponse?: QueryResponseResolvers<ContextType>;
-  ReplyResponse?: ReplyResponseResolvers<ContextType>;
   Scenario?: ScenarioResolvers<ContextType>;
   ScenarioDefinition?: ScenarioDefinitionResolvers<ContextType>;
   ScenarioDefinitions?: ScenarioDefinitionsResolvers<ContextType>;

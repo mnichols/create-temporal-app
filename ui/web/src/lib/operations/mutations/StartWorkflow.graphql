@@ -1,6 +1,0 @@
-mutation StartWorkflow($input: StartWorkflowRequest!) {
-    startWorkflow(input: $input) {
-        workflowId,
-        value,
-    }
-}

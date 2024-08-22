@@ -1,7 +1,7 @@
 <script lang='ts'>
     import {getContextClient, mutationStore} from '@urql/svelte'
     import {humanId} from 'human-id'
-    import {StartWorkflowDocument} from '$gql'
+    import {AuthorizePaymentDocument} from '$gql'
     import {go} from '$lib/nav/index.js'
     import {Logger} from '$lib/log/index.js'
 
@@ -14,18 +14,19 @@
         if (formData.get('workflow-value')) {
             mutationStore({
                 client,
-                query: StartWorkflowDocument,
+                query: AuthorizePaymentDocument,
                 variables: {
                     input: {
-                        workflowId: formData.get('id'),
+                        paymentId: formData.get('id'),
+                        accountId: formData.get('account-id'),
                         value: formData.get('workflow-value'),
                     },
                 }
             }).subscribe(arg => {
-                logger.debug(arg, 'received')
-                if (arg?.data?.startWorkflow) {
-                    logger.debug('redirecting', arg.data.startWorkflow?.workflowId)
-                    go(`/app/${arg.data.startWorkflow.workflowId}`)
+                console.log('arg', arg)
+                if (arg?.data?.authorizePayment) {
+                    console.log('redirecting', arg?.data?.authorizePayment)
+                    go(`/app/${arg.data.authorizePayment.paymentId}`)
                 }
             })
 
@@ -35,17 +36,21 @@
 
 <form on:submit|preventDefault={startWorkflow} class='flex flex-col'>
     <label for='id' class='label'>
-        <span class='label-text'>ID</span>
+        <span class='label-text'>Payment ID</span>
         <input type='text' name='id' placeholder='Enter id here' required
                class='input w-full max-w-xs'
                value={defaultId}/>
     </label>
-    <label for='workflow-value' class='label'>
-        <span class='label-text'>Value</span>
-        <input type='text' name='workflow-value' placeholder='Enter value here' required class='input w-full max-w-xs'/>
+    <label for='account-id' class='label'>
+        <span class='label-text'>Account ID</span>
+        <input type='text' name='account-id' placeholder='Enter value here' required class='input w-full max-w-xs'/>
     </label>
 
-    <button type='submit' class='btn accent-green-200'>Start Workflow</button>
+    <label for='workflow-value' class='label'>
+        <span class='label-text'>Amount</span>
+        <input type='text' name='workflow-value' placeholder='Enter value here' required class='input w-full max-w-xs'/>
+    </label>
+    <button type='submit' class='btn accent-green-200'>Make Payment</button>
 </form>
 
 <!--{#if $workflow && $workflow.data}-->

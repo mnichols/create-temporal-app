@@ -1,12 +1,11 @@
-subscription SubCurrentWorkflowState($input: WorkflowStateRequest!) {
+subscription SubCurrentPaymentState($input: WorkflowStateRequest!) {
     workflowState(input: $input) {
-        workflowId,
+        paymentId,
         value,
-        validation { value },
+        authorization { token, approved },
         applicationMutation1 { value },
         applicationMutation2 { value },
         compensation { value },
-        reply { value},
         beginning { value },
         finalizable,
         finalization { value }

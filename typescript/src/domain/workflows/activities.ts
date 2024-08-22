@@ -1,4 +1,5 @@
 import {
+    AuthorizePaymentRequest,
     BeginRequest,
     BeginResponse,
     CompensateRequest,
@@ -7,6 +8,7 @@ import {
     FinalizeResponse,
     MutateApplicationRequest,
     MutateApplicationResponse,
+    PaymentAuthorizationResponse,
     QueryRequest,
     QueryResponse,
     ValidateRequest,
@@ -18,10 +20,18 @@ export async function validate(params: ValidateRequest): Promise<ValidateRespons
     return {value: params.value}
 }
 
-export async function authorizePayment(params: ValidateRequest): Promise<ValidateResponse> {
-    return {value: params.value}
+export async function authorizePayment(params: AuthorizePaymentRequest): Promise<string> {
+    return `${params.value}__${params.paymentId}`
 }
 
+export async function getAuthorization(token: string): Promise<PaymentAuthorizationResponse> {
+    const parts = token.split('__')
+    return {
+        token,
+        approved: true,
+        value: parts[0]
+    }
+}
 
 export async function mutateApplication(params: MutateApplicationRequest): Promise<MutateApplicationResponse> {
     return {value: params.value}

@@ -16,4 +16,7 @@
     {#if item.value}
         <span class='label label-text'>= ({item.value})</span>
     {/if}
+    {#if item.token}
+        <span class='label label-text'>= ({item.token})</span>
+    {/if}
 </div>

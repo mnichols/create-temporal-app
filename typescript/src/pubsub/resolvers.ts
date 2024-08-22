@@ -1,4 +1,4 @@
-import {CurrentWorkflowState, Resolvers, SubscriptionWorkflowStateArgs} from '../gql/index.js'
+import {CurrentPaymentState, Resolvers, SubscriptionWorkflowStateArgs} from '../gql/index.js'
 import {Client} from '@temporalio/client'
 import {GraphQLResolveInfo} from 'graphql'
 
@@ -19,7 +19,7 @@ export const createResolvers = (client: Client): Resolvers => {
     const res: Resolvers = {
         Subscription: {
             workflowState: {
-                resolve(payload: CurrentWorkflowState): Promise<Promise<CurrentWorkflowState> | CurrentWorkflowState> | Promise<CurrentWorkflowState> | CurrentWorkflowState {
+                resolve(payload: CurrentPaymentState): Promise<Promise<CurrentPaymentState> | CurrentPaymentState> | Promise<CurrentPaymentState> | CurrentPaymentState {
                     return payload
                 },
                 subscribe: workflowStateSubscription(client)
@@ -38,7 +38,14 @@ const workflowStateSubscription = (client: Client) => {
     }, context: any, info: GraphQLResolveInfo) {
         for await (const time of interval(1000)) {
             let wf = client.workflow.getHandle(args.input?.workflowId || 'notfound')
-            yield await wf.query('currentState')
+            try {
+                let result = await wf.query('currentState')
+                console.log('result', result)
+                yield result
+            } catch (e) {
+                console.error('subscription error', e)
+                throw e
+            }
         }
     }
 }

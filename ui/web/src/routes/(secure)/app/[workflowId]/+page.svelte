@@ -3,14 +3,14 @@
     import WorkflowLink from '$lib/components/workflow/WorkflowLink.svelte'
     import SignalMarkFinalizable from '$lib/components/workflow/SignalMarkFinalizable.svelte'
     import {getContextClient, queryStore, subscriptionStore} from '@urql/svelte'
-    import {type CurrentWorkflowState, QueryWorkflowDocument, SubCurrentWorkflowStateDocument} from '$gql'
+    import {type CurrentPaymentState, QueryWorkflowDocument, SubCurrentPaymentStateDocument} from '$gql'
     import {onDestroy} from 'svelte'
     import WorkflowStateCard from '$lib/components/workflow/WorkflowStateCard.svelte'
     import {Logger} from '$lib/log/index.js'
 
     let workflowId = $page.params.workflowId
 
-    let workflowState: CurrentWorkflowState
+    let workflowState: CurrentPaymentState
     let logger = Logger.child({component: 'app[workflowId]'})
     // actual data handler for each event from a subscription
     const handleData = (previousData: any | undefined, data: any) => {
@@ -45,7 +45,7 @@
 
     let messages = subscriptionStore({
         client: getContextClient(),
-        query: SubCurrentWorkflowStateDocument,
+        query: SubCurrentPaymentStateDocument,
         variables: {input: {workflowId}}
     }, handleData)
     let unsub = messages.subscribe(arg => {

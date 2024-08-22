@@ -22,6 +22,20 @@ export type AppInfo = {
   temporal: TemporalConnection;
 };
 
+export type AuthorizePaymentRequest = {
+  accountId: Scalars['String']['input'];
+  paymentId: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+};
+
+export type AuthorizePaymentResponse = {
+  __typename?: 'AuthorizePaymentResponse';
+  approved: Scalars['Boolean']['output'];
+  paymentId: Scalars['String']['output'];
+  token: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
 export type BeginRequest = {
   value: Scalars['String']['input'];
 };
@@ -40,18 +54,19 @@ export type CompensateResponse = {
   value: Scalars['String']['output'];
 };
 
-export type CurrentWorkflowState = {
-  __typename?: 'CurrentWorkflowState';
+export type CurrentPaymentState = {
+  __typename?: 'CurrentPaymentState';
   applicationMutation1?: Maybe<MutateApplicationResponse>;
   applicationMutation2?: Maybe<MutateApplicationResponse>;
+  authorization?: Maybe<PaymentAuthorizationResponse>;
+  authorizationToken?: Maybe<Scalars['String']['output']>;
   beginning?: Maybe<BeginResponse>;
   compensation?: Maybe<CompensateResponse>;
   finalizable?: Maybe<Scalars['String']['output']>;
   finalization?: Maybe<FinalizeResponse>;
-  reply?: Maybe<ReplyResponse>;
-  validation?: Maybe<ValidateResponse>;
+  paymentId: Scalars['String']['output'];
+  reply?: Maybe<PaymentAuthorizationResponse>;
   value: Scalars['String']['output'];
-  workflowId: Scalars['String']['output'];
 };
 
 export type FinalizeRequest = {
@@ -81,8 +96,13 @@ export type MutateApplicationResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  authorizePayment: AuthorizePaymentResponse;
   markFinalizable: FinalizeResponse;
-  startWorkflow: ReplyResponse;
+};
+
+
+export type MutationAuthorizePaymentArgs = {
+  input: AuthorizePaymentRequest;
 };
 
 
@@ -90,15 +110,17 @@ export type MutationMarkFinalizableArgs = {
   input: MarkFinalizableRequest;
 };
 
-
-export type MutationStartWorkflowArgs = {
-  input: StartWorkflowRequest;
+export type PaymentAuthorizationResponse = {
+  __typename?: 'PaymentAuthorizationResponse';
+  approved: Scalars['Boolean']['output'];
+  token: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type Query = {
   __typename?: 'Query';
   appInfo: AppInfo;
-  queryWorkflow: CurrentWorkflowState;
+  queryWorkflow: CurrentPaymentState;
   scenarioDefinitions: ScenarioDefinitions;
 };
 
@@ -121,13 +143,6 @@ export type ReplyRequest = {
   activityName: Scalars['String']['input'];
   taskQueue: Scalars['String']['input'];
   value: Scalars['String']['input'];
-};
-
-export type ReplyResponse = {
-  __typename?: 'ReplyResponse';
-  id: Scalars['String']['output'];
-  value: Scalars['String']['output'];
-  workflowId: Scalars['String']['output'];
 };
 
 export type Scenario = {
@@ -158,15 +173,9 @@ export type Scenarios = {
   scenarios: Array<Scenario>;
 };
 
-export type StartWorkflowRequest = {
-  reply?: InputMaybe<ReplyRequest>;
-  value: Scalars['String']['input'];
-  workflowId: Scalars['String']['input'];
-};
-
 export type Subscription = {
   __typename?: 'Subscription';
-  workflowState: CurrentWorkflowState;
+  workflowState: CurrentPaymentState;
 };
 
 
@@ -265,28 +274,29 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   AppInfo: ResolverTypeWrapper<AppInfo>;
+  AuthorizePaymentRequest: AuthorizePaymentRequest;
+  AuthorizePaymentResponse: ResolverTypeWrapper<AuthorizePaymentResponse>;
   BeginRequest: BeginRequest;
   BeginResponse: ResolverTypeWrapper<BeginResponse>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CompensateRequest: CompensateRequest;
   CompensateResponse: ResolverTypeWrapper<CompensateResponse>;
-  CurrentWorkflowState: ResolverTypeWrapper<CurrentWorkflowState>;
+  CurrentPaymentState: ResolverTypeWrapper<CurrentPaymentState>;
   FinalizeRequest: FinalizeRequest;
   FinalizeResponse: ResolverTypeWrapper<FinalizeResponse>;
   MarkFinalizableRequest: MarkFinalizableRequest;
   MutateApplicationRequest: MutateApplicationRequest;
   MutateApplicationResponse: ResolverTypeWrapper<MutateApplicationResponse>;
   Mutation: ResolverTypeWrapper<{}>;
+  PaymentAuthorizationResponse: ResolverTypeWrapper<PaymentAuthorizationResponse>;
   Query: ResolverTypeWrapper<{}>;
   QueryRequest: QueryRequest;
   QueryResponse: ResolverTypeWrapper<QueryResponse>;
   ReplyRequest: ReplyRequest;
-  ReplyResponse: ResolverTypeWrapper<ReplyResponse>;
   Scenario: ResolverTypeWrapper<Scenario>;
   ScenarioDefinition: ResolverTypeWrapper<ScenarioDefinition>;
   ScenarioDefinitions: ResolverTypeWrapper<ScenarioDefinitions>;
   Scenarios: ResolverTypeWrapper<Scenarios>;
-  StartWorkflowRequest: StartWorkflowRequest;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Subscription: ResolverTypeWrapper<{}>;
   TemporalConnection: ResolverTypeWrapper<TemporalConnection>;
@@ -298,28 +308,29 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   AppInfo: AppInfo;
+  AuthorizePaymentRequest: AuthorizePaymentRequest;
+  AuthorizePaymentResponse: AuthorizePaymentResponse;
   BeginRequest: BeginRequest;
   BeginResponse: BeginResponse;
   Boolean: Scalars['Boolean']['output'];
   CompensateRequest: CompensateRequest;
   CompensateResponse: CompensateResponse;
-  CurrentWorkflowState: CurrentWorkflowState;
+  CurrentPaymentState: CurrentPaymentState;
   FinalizeRequest: FinalizeRequest;
   FinalizeResponse: FinalizeResponse;
   MarkFinalizableRequest: MarkFinalizableRequest;
   MutateApplicationRequest: MutateApplicationRequest;
   MutateApplicationResponse: MutateApplicationResponse;
   Mutation: {};
+  PaymentAuthorizationResponse: PaymentAuthorizationResponse;
   Query: {};
   QueryRequest: QueryRequest;
   QueryResponse: QueryResponse;
   ReplyRequest: ReplyRequest;
-  ReplyResponse: ReplyResponse;
   Scenario: Scenario;
   ScenarioDefinition: ScenarioDefinition;
   ScenarioDefinitions: ScenarioDefinitions;
   Scenarios: Scenarios;
-  StartWorkflowRequest: StartWorkflowRequest;
   String: Scalars['String']['output'];
   Subscription: {};
   TemporalConnection: TemporalConnection;
@@ -334,6 +345,14 @@ export type AppInfoResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type AuthorizePaymentResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthorizePaymentResponse'] = ResolversParentTypes['AuthorizePaymentResponse']> = {
+  approved?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  paymentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type BeginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['BeginResponse'] = ResolversParentTypes['BeginResponse']> = {
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -344,17 +363,18 @@ export type CompensateResponseResolvers<ContextType = any, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CurrentWorkflowStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['CurrentWorkflowState'] = ResolversParentTypes['CurrentWorkflowState']> = {
+export type CurrentPaymentStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['CurrentPaymentState'] = ResolversParentTypes['CurrentPaymentState']> = {
   applicationMutation1?: Resolver<Maybe<ResolversTypes['MutateApplicationResponse']>, ParentType, ContextType>;
   applicationMutation2?: Resolver<Maybe<ResolversTypes['MutateApplicationResponse']>, ParentType, ContextType>;
+  authorization?: Resolver<Maybe<ResolversTypes['PaymentAuthorizationResponse']>, ParentType, ContextType>;
+  authorizationToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   beginning?: Resolver<Maybe<ResolversTypes['BeginResponse']>, ParentType, ContextType>;
   compensation?: Resolver<Maybe<ResolversTypes['CompensateResponse']>, ParentType, ContextType>;
   finalizable?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   finalization?: Resolver<Maybe<ResolversTypes['FinalizeResponse']>, ParentType, ContextType>;
-  reply?: Resolver<Maybe<ResolversTypes['ReplyResponse']>, ParentType, ContextType>;
-  validation?: Resolver<Maybe<ResolversTypes['ValidateResponse']>, ParentType, ContextType>;
+  paymentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  reply?: Resolver<Maybe<ResolversTypes['PaymentAuthorizationResponse']>, ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  workflowId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -370,25 +390,25 @@ export type MutateApplicationResponseResolvers<ContextType = any, ParentType ext
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  authorizePayment?: Resolver<ResolversTypes['AuthorizePaymentResponse'], ParentType, ContextType, RequireFields<MutationAuthorizePaymentArgs, 'input'>>;
   markFinalizable?: Resolver<ResolversTypes['FinalizeResponse'], ParentType, ContextType, RequireFields<MutationMarkFinalizableArgs, 'input'>>;
-  startWorkflow?: Resolver<ResolversTypes['ReplyResponse'], ParentType, ContextType, RequireFields<MutationStartWorkflowArgs, 'input'>>;
+};
+
+export type PaymentAuthorizationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaymentAuthorizationResponse'] = ResolversParentTypes['PaymentAuthorizationResponse']> = {
+  approved?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   appInfo?: Resolver<ResolversTypes['AppInfo'], ParentType, ContextType>;
-  queryWorkflow?: Resolver<ResolversTypes['CurrentWorkflowState'], ParentType, ContextType, Partial<QueryQueryWorkflowArgs>>;
+  queryWorkflow?: Resolver<ResolversTypes['CurrentPaymentState'], ParentType, ContextType, Partial<QueryQueryWorkflowArgs>>;
   scenarioDefinitions?: Resolver<ResolversTypes['ScenarioDefinitions'], ParentType, ContextType>;
 };
 
 export type QueryResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['QueryResponse'] = ResolversParentTypes['QueryResponse']> = {
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReplyResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReplyResponse'] = ResolversParentTypes['ReplyResponse']> = {
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  workflowId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -421,7 +441,7 @@ export type ScenariosResolvers<ContextType = any, ParentType extends ResolversPa
 };
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-  workflowState?: SubscriptionResolver<ResolversTypes['CurrentWorkflowState'], "workflowState", ParentType, ContextType, RequireFields<SubscriptionWorkflowStateArgs, 'input'>>;
+  workflowState?: SubscriptionResolver<ResolversTypes['CurrentPaymentState'], "workflowState", ParentType, ContextType, RequireFields<SubscriptionWorkflowStateArgs, 'input'>>;
 };
 
 export type TemporalConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemporalConnection'] = ResolversParentTypes['TemporalConnection']> = {
@@ -437,15 +457,16 @@ export type ValidateResponseResolvers<ContextType = any, ParentType extends Reso
 
 export type Resolvers<ContextType = any> = {
   AppInfo?: AppInfoResolvers<ContextType>;
+  AuthorizePaymentResponse?: AuthorizePaymentResponseResolvers<ContextType>;
   BeginResponse?: BeginResponseResolvers<ContextType>;
   CompensateResponse?: CompensateResponseResolvers<ContextType>;
-  CurrentWorkflowState?: CurrentWorkflowStateResolvers<ContextType>;
+  CurrentPaymentState?: CurrentPaymentStateResolvers<ContextType>;
   FinalizeResponse?: FinalizeResponseResolvers<ContextType>;
   MutateApplicationResponse?: MutateApplicationResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  PaymentAuthorizationResponse?: PaymentAuthorizationResponseResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   QueryResponse?: QueryResponseResolvers<ContextType>;
-  ReplyResponse?: ReplyResponseResolvers<ContextType>;
   Scenario?: ScenarioResolvers<ContextType>;
   ScenarioDefinition?: ScenarioDefinitionResolvers<ContextType>;
   ScenarioDefinitions?: ScenarioDefinitionsResolvers<ContextType>;
