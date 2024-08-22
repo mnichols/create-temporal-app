@@ -13,7 +13,6 @@ import {
 
 const {
     capture,
-    begin,
     finalize,
     compensate,
 } = proxyActivities<typeof activities>({
@@ -27,6 +26,9 @@ const currentWorkflowStateQueryDef =
 
 const markFinalizableSignalDef = defineSignal<[CaptureRequest]>(signalMarkFinalizable)
 
+const paymentCaptureTimeoutMs = 1000 * 180
+
+// completePayment models the steps to capture and perhaps notify customer of payment completion
 export async function completePayment(params: CurrentPaymentState): Promise<CurrentPaymentState> {
     const currentState: CurrentPaymentState = params
     let captureRequested: CaptureRequest | undefined
@@ -42,13 +44,17 @@ export async function completePayment(params: CurrentPaymentState): Promise<Curr
         })
     }
 
-    const conditionMet = await condition(() => !!captureRequested, 1000 * 180)
+    // either receive a capture request or abandon the payment
+    // this humble line of code wipes out Crons, reaper services, zombie payments, etc
+    const conditionMet = await condition(() => !!captureRequested, paymentCaptureTimeoutMs)
 
     if (!conditionMet) {
         // payment was never captured so release the authorization
+        // this is a form of compensation
         return currentState
     }
 
+    // another Saga
     if (captureRequested) {
         try {
             currentState.capture = await capture(captureRequested)
@@ -60,7 +66,7 @@ export async function completePayment(params: CurrentPaymentState): Promise<Curr
 
     currentState.finalization = await finalize({
         workflowId: workflowInfo().workflowId,
-        value: currentState.capture?.value || 'unknown'
+        value: currentState.capture?.value || currentState.value
     })
     return currentState
 }

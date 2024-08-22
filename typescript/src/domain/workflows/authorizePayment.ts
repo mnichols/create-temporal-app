@@ -32,7 +32,9 @@ const queryCurrentWorkflowState = 'currentState'
 const currentWorkflowStateQueryDef =
     defineQuery<CurrentPaymentState, [QueryQueryWorkflowArgs]>(queryCurrentWorkflowState)
 
+// authorizePayment rapidly gets an authorization for UX and then continues asynchronously thru settlement
 export async function authorizePayment(params: AuthorizePaymentRequest): Promise<AuthorizePaymentResponse> {
+    // initialize business state we can use to track during progress
     const currentState: CurrentPaymentState = {
         accountId: params.accountId,
         value: params.value,
@@ -45,11 +47,14 @@ export async function authorizePayment(params: AuthorizePaymentRequest): Promise
         finalization: undefined,
         finalizable: undefined,
         paymentId: workflowInfo().workflowId,
+        // mint the identifier to be used for the workflow for checking in on payment completion progress
         paymentCompletionId: `comp_${params.paymentId}`,
     }
 
+    // expose this state to the outside via Query
     setHandler(currentWorkflowStateQueryDef, (params: QueryQueryWorkflowArgs) => currentState)
 
+    // Saga pattern is merely a try...catch statement
     try {
         currentState.authorizationToken = await doAuthorizePayment(params)
         currentState.authorization = await getAuthorization(currentState.authorizationToken)
@@ -58,6 +63,8 @@ export async function authorizePayment(params: AuthorizePaymentRequest): Promise
         throw err
     }
 
+    // continue async process for capture and settlement but
+    // support synchronous response for UX
     await startChild(completePayment, {
         workflowId: currentState.paymentCompletionId,
         args: [currentState],
